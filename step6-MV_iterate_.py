@@ -4,6 +4,7 @@ import os
 import pyjsparser
 import re
 import sys
+import tempfile
 import urllib.parse
 
 get_headers = {
@@ -81,6 +82,9 @@ for game_id, key in games:
             ticket = json.load(r)
             game_path = ticket['data']['path'].lstrip('/')
             game_url = ticket['data']['gameUrl']
+
+        temp_dir = tempfile.TemporaryDirectory()
+        temp_urllist = os.path.join(temp_dir.name, 'temp_urllist')
 
         os.system(f'wget --execute="robots=off" --no-verbose --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
@@ -193,9 +197,9 @@ for game_id, key in games:
         with open('data/MV_plugins.json', 'w') as w:
             json.dump(glob_plugins, w)
 
-        with open('data/tmp', 'w') as w:
+        with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
-        os.system(f'wget --execute="robots=off" --no-verbose --input-file=data/tmp --force-directories --no-host-directories \
+        os.system(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
@@ -216,9 +220,9 @@ for game_id, key in games:
                     # DataManager.loadMapData = function(mapId) {}
                     step_urls.append(os.path.join(resource_root, game_path, f'data/Map{_map["id"]:03}.json'))
 
-        with open('data/tmp', 'w') as w:
+        with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
-        os.system(f'wget --execute="robots=off" --no-verbose --input-file=data/tmp --force-directories --no-host-directories \
+        os.system(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
@@ -470,9 +474,9 @@ for game_id, key in games:
                 step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(re.sub(r'\.png$', '.rpgmvp', resource_url), safe='/')))
             step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(resource_url, safe='/')))
 
-        with open('data/tmp', 'w') as w:
+        with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
-        os.system(f'wget --execute="robots=off" --no-verbose --input-file=data/tmp --force-directories --no-host-directories \
+        os.system(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
@@ -486,7 +490,10 @@ for game_id, key in games:
             for url in discovered_urls:
                 print(url, file=w)
 
+        temp_dir.cleanup()
+
     except AssertionError as ex:
+        if temp_dir: temp_dir.cleanup()
         print(f'gm{game_id} (MV) failed. {ex.args}')
         with open(f'data/iterate.txt', 'a') as a:
             print(f'gm{game_id:05d} (MV) failed. {ex.args}', file=a)
