@@ -83,6 +83,14 @@ python step6-MV_iterate_.py <gameId>
 python step6-MV_iterate_.py <gameId_range_start> <gameId_range_end>
 ```
 
+### Fetch EasyRPG Player (for RPG Maker 2000, RPG Maker 2003)
+
+```
+python step6-ER_iterate_.py
+python step6-ER_iterate_.py <gameId>
+python step6-ER_iterate_.py <gameId_range_start> <gameId_range_end>
+```
+
 ## Contribution
 
 - Game Atsumaru will shut down at 12pm (UTC+9) on June 28, 2023.
