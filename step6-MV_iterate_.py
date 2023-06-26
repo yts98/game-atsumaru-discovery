@@ -97,8 +97,9 @@ for game_id, key in games:
         Decrypter = {}
 
         assert os.path.isfile(os.path.join(game_path, 'js/rpg_core.js')), 'js/rpg_core.js'
-        with open(os.path.join(game_path, 'js/rpg_core.js'), 'r') as r:
-            content = r.read()
+        with open(os.path.join(game_path, 'js/rpg_core.js'), 'r') as r, open(os.path.join(game_path, 'js/rpg_core.js'), 'r', encoding='shift-jis') as rs:
+            try: content = r.read()
+            except UnicodeDecodeError: content = rs.read()
             body = pyjsparser.parse(content)['body']
             for node in filter(lambda node: node['type'] == 'ExpressionStatement'
                             and node['expression']['type'] == 'AssignmentExpression'
@@ -130,8 +131,9 @@ for game_id, key in games:
         audio_path = 'audio/'
 
         assert os.path.isfile(os.path.join(game_path, 'js/rpg_managers.js')), 'js/rpg_managers.js'
-        with open(os.path.join(game_path, 'js/rpg_managers.js'), 'r') as r:
-            content = r.read()
+        with open(os.path.join(game_path, 'js/rpg_managers.js'), 'r') as r, open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='shift-jis') as rs:
+            try: content = r.read()
+            except UnicodeDecodeError: content = rs.read()
             assert content.find("var url = 'data/' + src;") >= 0, 'js/rpg_managers.js'
             body = pyjsparser.parse(content)['body']
             # DataManager._databaseFiles = [{ name: '$dataActors', src: 'Actors.json' },];
@@ -170,8 +172,9 @@ for game_id, key in games:
             glob_plugins = {}
 
         assert os.path.isfile(os.path.join(game_path, 'js/plugins.js')), 'js/plugins.js'
-        with open(os.path.join(game_path, 'js/plugins.js'), 'r') as r:
-            content = r.read()
+        with open(os.path.join(game_path, 'js/plugins.js'), 'r') as r, open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='shift-jis') as rs:
+            try: content = r.read()
+            except UnicodeDecodeError: content = rs.read()
             body = pyjsparser.parse(content)['body']
             assert len(body) == 2, 'js/plugins.js'
             for node in filter(lambda node: node['type'] == 'VariableDeclaration', body):
@@ -385,14 +388,16 @@ for game_id, key in games:
                 resource_urls.append(f'img/titles2/{data_system["title2Name"]}.png')
 
         assert os.path.isfile(os.path.join(game_path, 'js/rpg_managers.js')), 'js/rpg_managers.js'
-        with open(os.path.join(game_path, 'js/rpg_managers.js'), 'r') as r:
-            content = r.read()
+        with open(os.path.join(game_path, 'js/rpg_managers.js'), 'r') as r, open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='shift-jis') as rs:
+            try: content = r.read()
+            except UnicodeDecodeError: content = rs.read()
             for filename in re.findall(r"Graphics\.setLoadingImage\('([^']+)'\)", content):
                 resource_urls.append(filename)
 
         assert os.path.isfile(os.path.join(game_path, 'js/rpg_scenes.js')), 'js/rpg_scenes.js'
-        with open(os.path.join(game_path, 'js/rpg_scenes.js'), 'r') as r:
-            content = r.read()
+        with open(os.path.join(game_path, 'js/rpg_scenes.js'), 'r') as r, open(os.path.join(game_path, 'js/rpg_scenes.js'), 'r', encoding='shift-jis') as rs:
+            try: content = r.read()
+            except UnicodeDecodeError: content = rs.read()
             for filename in re.findall(r"ImageManager\.(?:load|reserve|request)System\('([^']+)'\)", content):
                 # ImageManager.loadSystem
                 resource_urls.append(f'img/system/{filename}.png')
