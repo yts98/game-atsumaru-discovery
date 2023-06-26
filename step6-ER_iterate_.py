@@ -85,6 +85,17 @@ for game_id, key in games:
         temp_dir = tempfile.TemporaryDirectory()
         temp_urllist = os.path.join(temp_dir.name, 'temp_urllist')
 
+        with open(temp_urllist, 'w') as w:
+            print(game_url, file=w)
+        os.system(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
+                --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
+                {cookie_argument} \
+                --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
+                --warc-file=warc/gm{game_id} --no-warc-compression --no-warc-keep-log \
+                --recursive --level=inf --no-parent')
+
+        # Step 1: index.json
+
         discovered_urls = []
         step_urls = []
         resource_urls = [
@@ -100,15 +111,15 @@ for game_id, key in games:
             step_urls.append(os.path.join(resource_root, game_path, resource_path, urllib.parse.quote(resource_url, safe='/')))
 
         with open(temp_urllist, 'w') as w:
-            for url in [game_url, *step_urls]: print(url, file=w)
+            for url in step_urls: print(url, file=w)
         os.system(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
-                --warc-file=warc/gm{game_id} --no-warc-compression --no-warc-keep-log \
-                --recursive --level=inf --no-parent')
+                --warc-file=warc/gm{game_id}_1 --no-warc-compression --no-warc-keep-log \
+                --recursive --level=inf --no-parent --timeout=10')
 
-        # Step 1: Resources
+        # Step 2: Resources
 
         discovered_urls.extend(step_urls)
         step_urls = []
@@ -144,7 +155,7 @@ for game_id, key in games:
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
-                --warc-file=warc/gm{game_id}_1 --no-warc-compression --no-warc-keep-log \
+                --warc-file=warc/gm{game_id}_2 --no-warc-compression --no-warc-keep-log \
                 --recursive --level=inf --no-parent --timeout=10')
 
         discovered_urls.extend(step_urls)
