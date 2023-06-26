@@ -343,7 +343,7 @@ for game_id, key in games:
                 if _map is not None:
                     map_path = os.path.join(game_path, f'data/Map{_map["id"]:03}.json')
                     assert os.path.isfile(map_path), 'data/MapInfos.json'
-                    with open(map_path, 'r') as rm:
+                    with open(map_path, 'r', encoding='utf-8-sig') as rm:
                         data_map = json.load(rm)
                         audio_names.add(('bgm', data_map['bgm']['name']))
                         audio_names.add(('bgm', data_map['bgs']['name']))
@@ -362,9 +362,12 @@ for game_id, key in games:
                 'defeatMe', 'gameoverMe', 'victoryMe',
                 'sounds',
                 'title1Name', 'title2Name',
-            ]))
+            ])), 'data/System.json'
             if 'encryptionKey' in data_system.keys():
-                raise NotImplementedError
+                assert set(data_system.keys()).issuperset(set(['hasEncryptedImages', 'hasEncryptedAudio'])), 'data/System.json'
+                assert re.search(r'^[0-9a-f]{32}$', data_system['encryptionKey']), 'data/System.json'
+                assert isinstance(data_system['hasEncryptedImages'], bool) and isinstance(data_system['hasEncryptedAudio'], bool), 'data/System.json'
+                Decrypter.update({ 'hasEncryptedImages': data_system['hasEncryptedImages'], 'hasEncryptedAudio': data_system['hasEncryptedAudio'] })
             for vehicle in ['airship', 'boat', 'ship']:
                 if data_system[vehicle]['bgm'] is not None:
                     audio_names.add(('bgm', data_system[vehicle]['bgm']['name']))
@@ -400,14 +403,13 @@ for game_id, key in games:
             # AudioManager.playMe
             # AudioManager.playSe
             if len(name) >= 1:
-                if folder == 'bgm' and Decrypter.get('hasEncryptedAudio') == True:
+                if Decrypter.get('hasEncryptedAudio') == True:
                     # AudioManager.playEncryptedBgm
                     # Decrypter.extToEncryptExt
                     resource_urls.append(os.path.join(audio_path, f'{folder}/{name}.rpgmvo'))
                     resource_urls.append(os.path.join(audio_path, f'{folder}/{name}.rpgmvm'))
-                else:
-                    resource_urls.append(os.path.join(audio_path, f'{folder}/{name}.ogg'))
-                    resource_urls.append(os.path.join(audio_path, f'{folder}/{name}.m4a'))
+                resource_urls.append(os.path.join(audio_path, f'{folder}/{name}.ogg'))
+                resource_urls.append(os.path.join(audio_path, f'{folder}/{name}.m4a'))
 
         for movie_name in sorted(movie_names):
             if len(movie_name) >= 1:
@@ -460,10 +462,8 @@ for game_id, key in games:
 
         for resource_url in sorted(set(resource_urls)):
             if re.search(r'\.png$', resource_url) and Decrypter.get('hasEncryptedImages') == True and resource_url not in Decrypter['_ignoreList']:
-                # replace the file extension to .rpgmvp
-                raise NotImplementedError
-            else:
-                step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(resource_url, safe='/')))
+                step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(re.sub(r'\.png$', '.rpgmvp', resource_url), safe='/')))
+            step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(resource_url, safe='/')))
 
         with open('data/tmp', 'w') as w:
             for url in step_urls: print(url, file=w)
