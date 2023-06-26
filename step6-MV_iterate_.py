@@ -254,7 +254,7 @@ for game_id, key in games:
                 # Change Victory ME, Change Defeat ME
                 elif child['code'] in [133, 139]: audio_names.add(('me', child['parameters'][0]['name']))
                 # Change Vehicle BGM
-                elif child['code'] in [140]: audio_names.add(('bgm', child['parameters'][1]))
+                elif child['code'] in [140]: audio_names.add(('bgm', child['parameters'][1]['name']))
                 # Set Movement Route
                 elif child['code'] in [205]:
                     for command in child['parameters'][1]['list']:
