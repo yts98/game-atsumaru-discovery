@@ -59,7 +59,7 @@ unlisted_games = []
 
 with open('data/key_CDX.txt', 'r') as r:
     for line in r.readlines():
-        match = re.match(r'^https://game\.nicovideo\.jp/atsumaru/games/gm([1-9][0-9]*)\?key=([0-9a-f]{12})$', line.strip())
+        match = re.search(r'^https://game\.nicovideo\.jp/atsumaru/games/gm([1-9][0-9]*)\?key=([0-9a-f]{12})$', line.strip())
         assert isinstance(match, re.Match), line.strip()
         if int(match[1]) in findings['200']:
             print(f'{match[1]} is public now.')
@@ -69,7 +69,7 @@ with open('data/key_CDX.txt', 'r') as r:
 
 with open('data/key_Google.txt', 'r') as r:
     for line in r.readlines():
-        match = re.match(r'^https://game\.nicovideo\.jp/atsumaru/games/gm([1-9][0-9]*)\?key=([0-9a-f]{12})$', line.strip())
+        match = re.search(r'^https://game\.nicovideo\.jp/atsumaru/games/gm([1-9][0-9]*)\?key=([0-9a-f]{12})$', line.strip())
         assert isinstance(match, re.Match), line.strip()
         if int(match[1]) in findings['200']:
             print(f'{match[1]} is public now.')
