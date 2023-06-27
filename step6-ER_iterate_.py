@@ -153,6 +153,7 @@ for game_id, key in games:
                 if key in ['easyrpg.soundfont', 'harmony.dll', 'rpg_rt.ldb', 'rpg_rt.lmt', 'rpg_rt.ini'] \
                     or re.search(r'^map[0-9]+\.lmu$', key):
                     assert isinstance(property, str), ('index.json', key, property)
+                if isinstance(property, str):
                     resource_urls.append(property)
                 else:
                     assert isinstance(property, dict), ('index.json', key, property)
