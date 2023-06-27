@@ -7,6 +7,11 @@ import sys
 import tempfile
 import urllib.parse
 
+if not os.path.isdir('./ticket'):
+    os.mkdir('./ticket')
+if not os.path.isdir('./warc'):
+    os.mkdir('./warc')
+
 get_headers = {
     'Cache-Control': 'no-cache',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0',
