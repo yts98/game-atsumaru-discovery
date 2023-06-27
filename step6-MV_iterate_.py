@@ -384,7 +384,7 @@ def fetch_game(game_id, key=None):
             data_enemies = json.load(r)
             for enemy in data_enemies:
                 if enemy is not None:
-                    if isinstance(enemy['battlerName'], str):
+                    if isinstance(enemy.get('battlerName'), str):
                         enemy_names.add(enemy['battlerName'])
 
         assert os.path.isfile(os.path.join(game_path, 'data/Tilesets.json')), 'data/Tilesets.json'
