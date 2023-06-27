@@ -584,24 +584,30 @@ def main():
             print('KeyboardInterrupt')
             raise
         except:
-            if ErrorInThread is not False:
-                print(f'\n\n==== ERROR: gm{ErrorGameId} (MV) ====', flush=True)
-                print(str(ErrorInThread))
-                # show traceback
-                traceback.print_tb(ErrorInThread.__traceback__)
-                # write to log
-                with open(f'MV-Errors.log', 'a') as a:
-                    a.write(f'gm{ErrorGameId} (MV): {str(ErrorInThread)}\n')
-                # reset
-                ErrorInThread = False
-            else:
-                raise
+            handle_ErrorInThread(ErrorInThread, )
+            # reset
+            ErrorInThread = False
 
     while threading.active_count() > 1:
-        if ErrorInThread is not False:
-            raise ErrorInThread
+        handle_ErrorInThread(ErrorInThread, )
+        ErrorInThread = False
         time.sleep(1)
+    handle_ErrorInThread(ErrorInThread, )
 
+def handle_ErrorInThread(ErrorInThread, ignore=True, log=True, show_traceback=True):
+    if ErrorInThread is not False:
+        print(f'\n\n==== ERROR: gm{ErrorGameId} (MV) ====', flush=True)
+        print(str(ErrorInThread))
+        # show traceback
+        if show_traceback:
+            traceback.print_tb(ErrorInThread.__traceback__)
+        # write to log
+        if log:
+            with open(f'MV-Errors.log', 'a') as a:
+                a.write(f'gm{ErrorGameId} (MV): {str(ErrorInThread)}\n')
+        
+        if not ignore:
+            raise ErrorInThread
 
 try:
     main()
