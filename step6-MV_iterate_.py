@@ -304,9 +304,20 @@ for game_id, key in games:
             data_actor = json.load(r)
             for actor in data_actor:
                 if actor is not None:
-                    character_names.add(actor['characterName'])
-                    face_names.add(actor['faceName'])
-                    actor_names.add(actor['battlerName'])
+                    if 'characterName' in actor.keys():
+                        character_names.add(actor['characterName'])
+                    if 'faceName' in actor.keys():
+                        face_names.add(actor['faceName'])
+                    if 'battlerName' in actor.keys():
+                        actor_names.add(actor['battlerName'])
+                    if 'animation1Name' in actor.keys():
+                        animation_names.add(actor['animation1Name'])
+                    if 'animation2Name' in actor.keys():
+                        animation_names.add(actor['animation2Name'])
+                    if 'timing' in actor.keys():
+                        for timing in actor['timings']:
+                            if timing['se'] is not None:
+                                audio_names.add(('se', timing['se']['name']))
 
         assert os.path.isfile(os.path.join(game_path, 'data/Animations.json')), 'data/Animations.json'
         with open(os.path.join(game_path, 'data/Animations.json'), 'r', encoding='utf-8-sig') as r:
