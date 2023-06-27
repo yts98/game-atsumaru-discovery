@@ -2,17 +2,24 @@ import datetime
 import itertools
 import json
 import os
+import random
+import time
 import pyjsparser
 import re
 import sys
 import tempfile
 import time
 import urllib.parse
+import threading
+import subprocess
 
 if not os.path.isdir('./ticket'):
     os.mkdir('./ticket')
 if not os.path.isdir('./warc'):
     os.mkdir('./warc')
+
+MV_plugins_lock = threading.Lock()
+ErrorInThread = False
 
 get_headers = {
     'Cache-Control': 'no-cache',
@@ -64,17 +71,25 @@ elif len(sys.argv) >= 2 and re.search('^[0-9]+$', sys.argv[1]):
     if len(games):
         print(f'Fetching gm{games[0][0]}')
 
-for game_id, key in games:
+def fetch_game(game_id, key=None):
     timestamp_suffix = '' and f'_{int(time.time()*1E6)}'
     try:
         if key is None:
             ticket_url = f'https://api.game.nicovideo.jp/v1/rpgtkool/games/gm{game_id}/play-tickets.json?sandbox=0&wipAccessKey'
         else:
             ticket_url = f'https://api.game.nicovideo.jp/v1/rpgtkool/games/gm{game_id}/play-tickets.json?sandbox=0&wipAccessKey={key}'
-        os.system(f'curl -X POST -A "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
+        
+        curl_retries = 4
+        for _ in range(curl_retries):
+            ret_code = subprocess.call(f'curl -X POST -A "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 -H "X-Frontend-Id: 39" -H "X-Frontend-Version: 3.464.0" -H "X-Request-With: https://game.nicovideo.jp" \
                 -H "Origin: https://game.nicovideo.jp" -H "Referer: https://game.nicovideo.jp/" -F "=" \
-                -c "ticket/gm{game_id}_cookie.txt" -o ticket/gm{game_id}_ticket.json "{ticket_url}"')
+                -c "ticket/gm{game_id}_cookie.txt" -o ticket/gm{game_id}_ticket.json "{ticket_url}"'
+                ,shell=True)
+            if ret_code == 0:
+                break
+            print("curl error, retrying...")
+            time.sleep(random.randint(3, 7))
 
         assert os.path.isfile(f'ticket/gm{game_id}_cookie.txt')
         cookie_jar = []
@@ -94,12 +109,13 @@ for game_id, key in games:
         temp_dir = tempfile.TemporaryDirectory()
         temp_urllist = os.path.join(temp_dir.name, 'temp_urllist')
 
-        os.system(f'wget --execute="robots=off" --no-verbose --force-directories --no-host-directories \
+        ret_code = subprocess.call(f'wget --execute="robots=off" --no-verbose --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
                 --warc-file=warc/gm{game_id}{timestamp_suffix} --no-warc-compression --no-warc-keep-log \
-                --recursive --level=inf --no-parent {game_url}')
+                --recursive --level=inf --no-parent {game_url}'
+                ,shell=True)
 
         # Step 1: General settings
 
@@ -177,42 +193,44 @@ for game_id, key in games:
             assert content.find("PluginManager._path         = 'js/plugins/';") >= 0, 'js/rpg_managers.js'
             assert content.find("this.loadScript(plugin.name + '.js');") >= 0, 'js/rpg_managers.js'
 
-        if os.path.isfile('data/MV_plugins.json'):
-            with open('data/MV_plugins.json', 'r') as r:
-                glob_plugins = json.load(r)
-        else:
-            glob_plugins = {}
+        with MV_plugins_lock:
+            if os.path.isfile('data/MV_plugins.json'):
+                with open('data/MV_plugins.json', 'r') as r:
+                    glob_plugins = json.load(r)
+            else:
+                glob_plugins = {}
 
-        assert os.path.isfile(os.path.join(game_path, 'js/plugins.js')), 'js/plugins.js'
-        with open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='shift-jis') as rs:
-            try: content = r.read()
-            except UnicodeDecodeError: content = rs.read()
-            body = pyjsparser.parse(content)['body']
-            assert len(body) == 2, 'js/plugins.js'
-            for node in filter(lambda node: node['type'] == 'VariableDeclaration', body):
-                assert len(node['declarations']) == 1, 'js/plugins.js'
-                assert node['declarations'][0]['id']['name'] == '$plugins', 'js/plugins.js'
-                assert node['declarations'][0]['init']['type'] == 'ArrayExpression', 'js/plugins.js'
-                for plugin in node['declarations'][0]['init']['elements']:
-                    assert plugin['type'] == 'ObjectExpression', 'js/plugins.js'
-                    plugin_name = list(filter(lambda node: node['key']['value'] == 'name', plugin["properties"]))[0]['value']['value']
-                    step_urls.append(os.path.join(resource_root, game_path, f'js/plugins/{plugin_name}.js'))
-                    if plugin_name in glob_plugins.keys():
-                        glob_plugins[plugin_name] = sorted(list(set([*glob_plugins[plugin_name], game_id])))
-                    else:
-                        glob_plugins[plugin_name] = [game_id]
+            assert os.path.isfile(os.path.join(game_path, 'js/plugins.js')), 'js/plugins.js'
+            with open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='shift-jis') as rs:
+                try: content = r.read()
+                except UnicodeDecodeError: content = rs.read()
+                body = pyjsparser.parse(content)['body']
+                assert len(body) == 2, 'js/plugins.js'
+                for node in filter(lambda node: node['type'] == 'VariableDeclaration', body):
+                    assert len(node['declarations']) == 1, 'js/plugins.js'
+                    assert node['declarations'][0]['id']['name'] == '$plugins', 'js/plugins.js'
+                    assert node['declarations'][0]['init']['type'] == 'ArrayExpression', 'js/plugins.js'
+                    for plugin in node['declarations'][0]['init']['elements']:
+                        assert plugin['type'] == 'ObjectExpression', 'js/plugins.js'
+                        plugin_name = list(filter(lambda node: node['key']['value'] == 'name', plugin["properties"]))[0]['value']['value']
+                        step_urls.append(os.path.join(resource_root, game_path, f'js/plugins/{plugin_name}.js'))
+                        if plugin_name in glob_plugins.keys():
+                            glob_plugins[plugin_name] = sorted(list(set([*glob_plugins[plugin_name], game_id])))
+                        else:
+                            glob_plugins[plugin_name] = [game_id]
 
-        with open('data/MV_plugins.json', 'w') as w:
-            json.dump(glob_plugins, w)
+            with open('data/MV_plugins.json', 'w') as w:
+                json.dump(glob_plugins, w)
 
         with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
-        os.system(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
+        ret_code = subprocess.call(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
                 --warc-file=warc/gm{game_id}_1{timestamp_suffix} --no-warc-compression --no-warc-keep-log \
-                --recursive --level=inf --no-parent')
+                --recursive --level=inf --no-parent'
+                ,shell=True)
 
         # Step 2: Map settings
 
@@ -230,12 +248,13 @@ for game_id, key in games:
 
         with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
-        os.system(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
+        ret_code = subprocess.call(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
                 --warc-file=warc/gm{game_id}_2{timestamp_suffix} --no-warc-compression --no-warc-keep-log \
-                --recursive --level=inf --no-parent')
+                --recursive --level=inf --no-parent'
+                ,shell=True)
 
         # Step 3: Resources
 
@@ -507,12 +526,13 @@ for game_id, key in games:
 
         with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
-        os.system(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
+        ret_code = subprocess.call(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
                 --warc-file=warc/gm{game_id}_3{timestamp_suffix} --no-warc-compression --no-warc-keep-log \
-                --recursive --level=inf --no-parent --timeout=10')
+                --recursive --level=inf --no-parent --timeout=10'
+                ,shell=True)
 
         discovered_urls.extend(step_urls)
         step_urls = []
@@ -524,8 +544,28 @@ for game_id, key in games:
         temp_dir.cleanup()
 
     except AssertionError as ex:
-        if temp_dir: temp_dir.cleanup()
+        if "temp_dir" in locals() and temp_dir: temp_dir.cleanup()
+        else: print("temp_dir not found =======")
         now_string = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print(f'{now_string} gm{game_id} (MV) failed. {ex.args}')
         with open(f'data/iterate.txt', 'a') as a:
             print(f'{now_string} gm{game_id:05d} (MV) failed. {ex.args}', file=a)
+    
+    except Exception as ex:
+        global ErrorInThread
+        ErrorInThread = ex
+
+
+for game_id, key in games:
+    while threading.active_count() > 10:
+        if ErrorInThread is not False:
+            raise ErrorInThread
+        time.sleep(1)
+    if ErrorInThread is not False:
+        raise ErrorInThread
+
+    print(f'==== Fetching gm{game_id} (MV)... ====')
+    t = threading.Thread(target=fetch_game, args=(game_id, key))
+    t.daemon = True
+    t.start()
+    time.sleep(1)
