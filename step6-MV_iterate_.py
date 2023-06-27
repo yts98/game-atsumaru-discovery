@@ -532,15 +532,22 @@ def fetch_game(game_id, key=None):
                 step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(re.sub(r'\.png$', '.rpgmvp', resource_url), safe='/')))
             step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(resource_url, safe='/')))
 
-        with open(temp_urllist, 'w') as w:
-            for url in step_urls: print(url, file=w)
-        cp = subprocess.run(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
-                --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
-                {cookie_argument} \
-                --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
-                --warc-file=warc/gm{game_id}_3{timestamp_suffix} --no-warc-compression --no-warc-keep-log \
-                --recursive --level=inf --no-parent --timeout=10'
-                ,shell=True)
+        if game_id in [3]:
+            with open('data/tmp_gm3', 'w') as w:
+                for url in step_urls: print(url, file=w)
+            with open('data/tmp_gm3_cookie', 'w') as w:
+                print(cookie_argument, file=w)
+        else:
+            with open(temp_urllist, 'w') as w:
+                for url in step_urls: print(url, file=w)
+            cp = subprocess.run(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
+                    --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
+                    {cookie_argument} \
+                    --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
+                    --warc-file=warc/gm{game_id}_3{timestamp_suffix} --no-warc-compression --no-warc-keep-log \
+                    --recursive --level=inf --no-parent --timeout=10'
+                    ,shell=True)
+
         discovered_urls.extend(step_urls)
         step_urls = []
 
