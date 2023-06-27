@@ -368,9 +368,10 @@ for game_id, key in games:
                 if animation is not None:
                     if 'effectName' in animation.keys():
                         effect_names.add(animation['effectName'])
-                    for timing in animation['soundTimings']:
-                        if timing['se'] is not None:
-                            audio_names.add(('se', timing['se']['name']))
+                    if 'soundTimings' in animation.keys():
+                        for timing in animation['soundTimings']:
+                            if timing['se'] is not None:
+                                audio_names.add(('se', timing['se']['name']))
                     if 'timings' in animation.keys():
                         for timing in animation['timings']:
                             if timing['se'] is not None:
