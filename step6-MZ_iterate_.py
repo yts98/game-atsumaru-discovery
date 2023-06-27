@@ -410,16 +410,16 @@ for game_id, key in games:
             for _map in data_mapinfo:
                 if _map is not None:
                     map_path = os.path.join(game_path, f'data/Map{_map["id"]:03}.json')
-                    assert os.path.isfile(map_path), 'data/MapInfos.json'
-                    with open(map_path, 'r', encoding='utf-8-sig') as rm:
-                        data_map = json.load(rm)
-                        audio_names.add(('bgm', data_map['bgm']['name']))
-                        audio_names.add(('bgm', data_map['bgs']['name']))
-                        for event in data_map['events']:
-                            if event is not None:
-                                for page in event['pages']:
-                                    character_names.add(page['image']['characterName'])
-                                    parse_commandlist(page['list'])
+                    if os.path.isfile(map_path):
+                        with open(map_path, 'r', encoding='utf-8-sig') as rm:
+                            data_map = json.load(rm)
+                            audio_names.add(('bgm', data_map['bgm']['name']))
+                            audio_names.add(('bgm', data_map['bgs']['name']))
+                            for event in data_map['events']:
+                                if event is not None:
+                                    for page in event['pages']:
+                                        character_names.add(page['image']['characterName'])
+                                        parse_commandlist(page['list'])
 
         Decrypter = {}
 
