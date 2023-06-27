@@ -149,7 +149,7 @@ for game_id, key in games:
         with open(os.path.join(game_path, UNITY_WEBGL_BUILD_URL), 'r') as r:
             build_json = json.load(r)
             for key, value in build_json.items():
-                if key not in ['companyName', 'productName', 'productVersion'', TOTAL_MEMORY', 'splashScreenStyle', 'backgroundColor', 'unityVersion'] and isinstance(value, str):
+                if key not in ['companyName', 'productName', 'productVersion', 'TOTAL_MEMORY', 'splashScreenStyle', 'backgroundColor', 'unityVersion'] and isinstance(value, str):
                     resource_urls.append(os.path.join(build_path, value))
                     if key not in ['dataUrl', 'asmCodeUrl', 'asmMemoryUrl', 'asmFrameworkUrl', 'wasmCodeUrl', 'wasmMemoryUrl', 'wasmFrameworkUrl'] and isinstance(value, str):
                         print(key, value)
