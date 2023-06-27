@@ -58,6 +58,7 @@ elif len(sys.argv) >= 2 and re.search('^[0-9]+$', sys.argv[1]):
         print(f'Fetching gm{games[0][0]}')
 
 for game_id, key in games:
+    timestamp_suffix = '' and f'_{int(time.time()*1E6)}'
     try:
         if key is None:
             ticket_url = f'https://api.game.nicovideo.jp/v1/rpgtkool/games/gm{game_id}/play-tickets.json?sandbox=0&wipAccessKey'
@@ -92,7 +93,7 @@ for game_id, key in games:
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
-                --warc-file=warc/gm{game_id}_{int(time.time()*1E6)} --no-warc-compression --no-warc-keep-log \
+                --warc-file=warc/gm{game_id}{timestamp_suffix} --no-warc-compression --no-warc-keep-log \
                 --recursive --level=inf --no-parent')
 
         # Step 1: Resources
@@ -137,7 +138,7 @@ for game_id, key in games:
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
-                --warc-file=warc/gm{game_id}_1_{int(time.time()*1E6)} --no-warc-compression --no-warc-keep-log \
+                --warc-file=warc/gm{game_id}_1{timestamp_suffix} --no-warc-compression --no-warc-keep-log \
                 --recursive --level=inf --no-parent --timeout=10')
 
         discovered_urls.extend(step_urls)
