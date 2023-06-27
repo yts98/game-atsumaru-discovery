@@ -600,6 +600,7 @@ def main():
 
 try:
     main()
+    print('==== Done ====')
 except KeyboardInterrupt:
     print('KeyboardInterrupt')
 finally:
