@@ -472,7 +472,6 @@ for game_id, key in games:
                 if Decrypter.get('hasEncryptedAudio') == True:
                     # WebAudio.prototype._realUrl
                     resource_urls.append(os.path.join(audio_path, f'{folder}/{name}.ogg_'))
-                    raise NotImplementedError
                 # AudioManager.audioFileExt
                 resource_urls.append(os.path.join(audio_path, f'{folder}/{name}.ogg'))
 
@@ -529,7 +528,6 @@ for game_id, key in games:
         for script_url in sorted(set(resource_urls)):
             if re.search(r'\.png$', script_url) and Decrypter.get('hasEncryptedImages') == True:
                 step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(script_url + '_', safe='/')))
-                raise NotImplementedError
             step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(script_url, safe='/')))
 
         with open(temp_urllist, 'w') as w:
