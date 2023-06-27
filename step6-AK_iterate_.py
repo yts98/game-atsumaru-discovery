@@ -36,6 +36,9 @@ resource_root = 'https://resource.game.nicovideo.jp/'
 if not os.path.isfile('data/public.txt') or not os.path.isfile('data/key_valid.txt'):
     exit('Please check public and unlisted game_ids at first.')
 
+if not os.path.isfile('data/catagory.json'):
+    exit('Please categorize games at first.')
+
 games = []
 
 with open('data/public.txt', 'r') as r, open('data/key_valid.txt', 'r') as rk:
@@ -44,7 +47,10 @@ with open('data/public.txt', 'r') as r, open('data/key_valid.txt', 'r') as rk:
         assert isinstance(match, re.Match), line.strip()
         games.append((int(match[1]), match[2]))
 
-games = list(filter(lambda item: item[0] in [15302], games))
+with open('data/catagory.json', 'r') as r:
+    framework_games = json.load(r)
+
+games = list(filter(lambda item: item[0] in framework_games['Akashic'], games))
 games.sort()
 
 if len(sys.argv) >= 3 and re.search('^[0-9]+$', sys.argv[1]) and re.search('^[0-9]+$', sys.argv[2]):
@@ -100,32 +106,36 @@ for game_id, key in games:
         step_urls = []
         resource_urls = []
 
-        with open(os.path.join(game_path, 'data.js'), 'r') as r:
+        assert os.path.isfile(os.path.join(game_path, 'index.html')), 'index.html'
+        with open(os.path.join(game_path, 'index.html'), 'r') as r:
             content = r.read()
-            json_like = re.search(r'^gdjs\.projectData = ({.+});$', content)
-            json_data = json.loads(json_like[1])
-            # body = pyjsparser.parse(content)['body']
-            # for node in filter(lambda node: node['type'] == 'ExpressionStatement'
-            #                 and node['expression']['type'] == 'AssignmentExpression'
-            #                 and node['expression']['operator'] == '='
-            #                 and node['expression']['left']['type'] == 'MemberExpression'
-            #                 and node['expression']['left']['object']['type'] == 'Identifier'
-            #                 and node['expression']['left']['object']['name'] == 'gdjs'
-            #                 and node['expression']['left']['property']['type'] == 'Identifier'
-            #                 and node['expression']['left']['property']['name'] == 'projectData', body):
-            #     assert node['expression']['right']['type'] == 'ObjectExpression', 'data.js'
-            #     for property in node['expression']['right']['properties']:
-            #         if property['key']['value'] == 'properties':
-            #             for property in property['value']['properties']:
-            #                 if property['key']['value'] == 'platformSpecificAssets':
-            #                     for property in property['value']['properties']:
-            #                         resource_urls.append(property['value']['value'])
-            assert set(json_data.keys()).issuperset(set(['properties', 'resources']))
-            for key, value in json_data['properties']['platformSpecificAssets'].items():
-                resource_urls.append(value)
-            for resource in json_data['resources']['resources']:
-                assert isinstance(resource['file'], str)
-                resource_urls.append(resource['file'])
+            json_like = re.search(r'window\.gLocalAssetContainer\[\"game\.json\"\] *= *((?:\'|\")\{[^\n]+\}(?:\'|\"));?', content)
+            if json_like:
+                json_string = urllib.parse.unquote_plus(json.loads(json_like[1]))
+                json_data = json.loads(json_string)
+                assert set(json_data.keys()).issuperset(set(['width', 'height', 'fps', 'main', 'assets', 'environment', 'globalScripts'])), json_data.keys()
+                for key, item in json_data.items():
+                    if key not in ['width', 'height', 'fps', 'main', 'assets', 'operationPlugins', 'defaultLoadingScene', 'environment', 'globalScripts', 'moduleMainScripts']:
+                        assert not isinstance(item, dict), key
+                assert 'assets' in json_data.keys(), json_data.keys()
+                assert isinstance(json_data['assets'], dict), type(json_data['assets'])
+                for asset_key, asset_value in json_data['assets'].items():
+                    assert isinstance(asset_value, dict), type(asset_value)
+                    assert set(asset_value.keys()).issuperset(set(['type', 'path', 'virtualPath'])), asset_value.keys()
+                    assert asset_value['type'] in ['image', 'audio', 'script', 'text'], asset_value['type']
+                    if asset_value['type'] == 'audio':
+                        assert not re.search(r'\.ogg$', asset_value['path']), asset_value['path']
+                        assert re.search(r'/[0-9a-f]+$', asset_value['path']), asset_value['path']
+                        resource_urls.append(f'{asset_value["path"]}.ogg')
+                        resource_urls.append(f'{asset_value["path"]}.aac')
+                        resource_urls.append(f'{asset_value["path"]}.mp4')
+                    else:
+                        assert re.search(r'/[^\/]+\.[^\/\.]+$', asset_value['path']), asset_value['path']
+                        resource_urls.append(asset_value["path"])
+                if 'globalScripts' in json_data.keys():
+                    assert isinstance(json_data['globalScripts'], list) and len(json_data['globalScripts']) == 0, json_data['globalScripts']
+            else:
+                raise NotImplementedError(game_url)
 
         for resource_url in sorted(set(resource_urls)):
             step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(resource_url, safe='/')))
@@ -148,8 +158,8 @@ for game_id, key in games:
 
         temp_dir.cleanup()
 
-    except AssertionError as ex:
+    except (AssertionError, NotImplementedError) as ex:
         if temp_dir: temp_dir.cleanup()
-        print(f'gm{game_id} (GDJS) failed. {ex.args}')
+        print(f'gm{game_id} (AK) failed. {ex.args}')
         with open(f'data/iterate.txt', 'a') as a:
-            print(f'gm{game_id:05d} (GDJS) failed. {ex.args}', file=a)
+            print(f'gm{game_id:05d} (AK) failed. {ex.args}', file=a)

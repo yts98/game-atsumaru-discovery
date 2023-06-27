@@ -99,6 +99,14 @@ python step6-ER_iterate_.py <gameId>
 python step6-ER_iterate_.py <gameId_range_start> <gameId_range_end>
 ```
 
+### Fetch Akashic Engine resources
+
+```
+python step6-AK_iterate_.py
+python step6-AK_iterate_.py <gameId>
+python step6-AK_iterate_.py <gameId_range_start> <gameId_range_end>
+```
+
 ## Contribution
 
 - Game Atsumaru will shut down at 12pm (UTC+9) on June 28, 2023.
