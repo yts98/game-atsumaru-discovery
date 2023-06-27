@@ -3,7 +3,9 @@ import itertools
 import json
 import os
 import random
+import signal
 import time
+import traceback
 import pyjsparser
 import re
 import sys
@@ -20,6 +22,7 @@ if not os.path.isdir('./warc'):
 
 MV_plugins_lock = threading.Lock()
 ErrorInThread = False
+ErrorGameId = 0
 
 get_headers = {
     'Cache-Control': 'no-cache',
@@ -81,12 +84,12 @@ def fetch_game(game_id, key=None):
         
         curl_retries = 4
         for _ in range(curl_retries):
-            ret_code = subprocess.call(f'curl -X POST -A "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
+            cp = subprocess.run(f'curl -X POST -A "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 -H "X-Frontend-Id: 39" -H "X-Frontend-Version: 3.464.0" -H "X-Request-With: https://game.nicovideo.jp" \
                 -H "Origin: https://game.nicovideo.jp" -H "Referer: https://game.nicovideo.jp/" -F "=" \
                 -c "ticket/gm{game_id}_cookie.txt" -o ticket/gm{game_id}_ticket.json "{ticket_url}"'
                 ,shell=True)
-            if ret_code == 0:
+            if cp.returncode == 0:
                 break
             print("curl error, retrying...")
             time.sleep(random.randint(3, 7))
@@ -109,7 +112,7 @@ def fetch_game(game_id, key=None):
         temp_dir = tempfile.TemporaryDirectory()
         temp_urllist = os.path.join(temp_dir.name, 'temp_urllist')
 
-        ret_code = subprocess.call(f'wget --execute="robots=off" --no-verbose --force-directories --no-host-directories \
+        cp = subprocess.run(f'wget --execute="robots=off" --no-verbose --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
@@ -196,7 +199,8 @@ def fetch_game(game_id, key=None):
         with MV_plugins_lock:
             if os.path.isfile('data/MV_plugins.json'):
                 with open('data/MV_plugins.json', 'r') as r:
-                    glob_plugins = json.load(r)
+                    try: glob_plugins = json.load(r)
+                    except: glob_plugins = {}
             else:
                 glob_plugins = {}
 
@@ -224,7 +228,7 @@ def fetch_game(game_id, key=None):
 
         with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
-        ret_code = subprocess.call(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
+        cp = subprocess.run(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
@@ -248,7 +252,7 @@ def fetch_game(game_id, key=None):
 
         with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
-        ret_code = subprocess.call(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
+        cp = subprocess.run(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
@@ -529,14 +533,13 @@ def fetch_game(game_id, key=None):
 
         with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
-        ret_code = subprocess.call(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
+        cp = subprocess.run(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
                 --load-cookies=ticket/gm{game_id}_cookie.txt --keep-session-cookies \
                 --warc-file=warc/gm{game_id}_3{timestamp_suffix} --no-warc-compression --no-warc-keep-log \
                 --recursive --level=inf --no-parent --timeout=10'
                 ,shell=True)
-
         discovered_urls.extend(step_urls)
         step_urls = []
 
@@ -556,19 +559,49 @@ def fetch_game(game_id, key=None):
     
     except Exception as ex:
         global ErrorInThread
+        global ErrorGameId
         ErrorInThread = ex
+        ErrorGameId = game_id
+
+def main():
+    global ErrorInThread
+    for game_id, key in games:
+        try:
+            while threading.active_count() > 40:
+                if ErrorInThread is not False:
+                    raise ErrorInThread
+                time.sleep(1)
+            if ErrorInThread is not False:
+                raise ErrorInThread
+
+            print(f'==== Fetching gm{game_id} (MV)... ====')
+            t = threading.Thread(target=fetch_game, args=(game_id, key))
+            t.daemon = True
+            t.start()
+            time.sleep(1)
+        except KeyboardInterrupt:
+            print('KeyboardInterrupt')
+            raise
+        except:
+            if ErrorInThread is not False:
+                print(f'\n\n==== ERROR: gm{ErrorGameId} (MV) ====', flush=True)
+                print(str(ErrorInThread))
+                # show traceback
+                traceback.print_tb(ErrorInThread.__traceback__)
+                # write to log
+                with open(f'MV-Errors.log', 'a') as a:
+                    a.write(f'gm{ErrorGameId} (MV): {str(ErrorInThread)}\n')
+                # reset
+                ErrorInThread = False
+            else:
+                raise
 
 
-for game_id, key in games:
-    while threading.active_count() > 10:
-        if ErrorInThread is not False:
-            raise ErrorInThread
-        time.sleep(1)
-    if ErrorInThread is not False:
-        raise ErrorInThread
-
-    print(f'==== Fetching gm{game_id} (MV)... ====')
-    t = threading.Thread(target=fetch_game, args=(game_id, key))
-    t.daemon = True
-    t.start()
-    time.sleep(1)
+try:
+    main()
+except KeyboardInterrupt:
+    print('KeyboardInterrupt')
+finally:
+    my_pid = os.getpid()
+    # kill all subprocesses
+    os.killpg(os.getpgid(my_pid), signal.SIGTERM)
