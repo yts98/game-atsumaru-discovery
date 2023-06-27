@@ -1,3 +1,4 @@
+import datetime
 import itertools
 import json
 import os
@@ -334,15 +335,15 @@ for game_id, key in games:
                     character_names.add(child['parameters'][1])
                 # Script
                 elif child['code'] in [355]:
-                    print('script', child['parameters'])
+                    # print('script', child['parameters'])
                     pass
                 # Plugin Command MV (deprecated)
                 elif child['code'] in [356]:
-                    print('plugin-event-MV', child['parameters'])
+                    # print('plugin-event-MV', child['parameters'])
                     pass
                 # Plugin Command
                 elif child['code'] in [357]:
-                    print('plugin-event', child['parameters'])
+                    # print('plugin-event', child['parameters'])
                     pass
 
         assert os.path.isfile(os.path.join(game_path, 'data/Actors.json')), 'data/Actors.json'
@@ -567,6 +568,7 @@ for game_id, key in games:
 
     except AssertionError as ex:
         if temp_dir: temp_dir.cleanup()
-        print(f'gm{game_id} (MZ) failed. {ex.args}')
+        now_string = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print(f'{now_string} gm{game_id} (MZ) failed. {ex.args}')
         with open(f'data/iterate.txt', 'a') as a:
-            print(f'gm{game_id:05d} (MZ) failed. {ex.args}', file=a)
+            print(f'{now_string} gm{game_id:05d} (MZ) failed. {ex.args}', file=a)

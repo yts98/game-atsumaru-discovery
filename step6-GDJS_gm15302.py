@@ -1,3 +1,4 @@
+import datetime
 import itertools
 import json
 import os
@@ -152,6 +153,7 @@ for game_id, key in games:
 
     except AssertionError as ex:
         if temp_dir: temp_dir.cleanup()
-        print(f'gm{game_id} (GDJS) failed. {ex.args}')
+        now_string = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print(f'{now_string} gm{game_id} (GDJS) failed. {ex.args}')
         with open(f'data/iterate.txt', 'a') as a:
-            print(f'gm{game_id:05d} (GDJS) failed. {ex.args}', file=a)
+            print(f'{now_string} gm{game_id:05d} (GDJS) failed. {ex.args}', file=a)
