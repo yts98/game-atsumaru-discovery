@@ -5,14 +5,14 @@ game-atsumaru-discovery
 
 | [公開](data/public.txt) | [公開、会員限定](data/public_payment.txt) | [限定公開](data/key_valid.txt) | 非公開 |
 | ---: | -: | -----: | -------: |
-| 9469 | 21 | >= 307 | <= 19957 |
+| 9469 | 21 | >= 306 | <= 19958 |
 
 ## Framework (フレームワーク)
 
 | Framework                    | Count |
 | :--------------------------- | ----: |
 | [RPG Maker MV][MV]           |  5989 |
-| [RPG Maker MZ][MZ]           |  1332 |
+| [RPG Maker MZ][MZ]           |  1331 |
 | [Akashic Engine][AK]         |  1019 |
 | [EasyRPG Player][ER]         |   299 |
 | [TyranoBuilder][TY]          |   250 |
@@ -83,7 +83,7 @@ python step6-MV_iterate_.py <gameId>
 python step6-MV_iterate_.py <gameId_range_start> <gameId_range_end>
 ```
 
-### Fetch RPG Maker MV resources
+### Fetch RPG Maker MZ resources
 
 ```
 python step6-MZ_iterate_.py
@@ -102,6 +102,8 @@ python step6-ER_iterate_.py <gameId_range_start> <gameId_range_end>
 ## Contribution
 
 - Game Atsumaru will shut down at 12pm (UTC+9) on June 28, 2023.
+
+- You could claim an `gameId` range in https://pad.notkiska.pw/p/game-atsumaru .
 
 - Inform `yts98` on `#archiveteam-bs@irc.hackint.org` before the deadline if:
     - You encountered an exception during script execution.
