@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import itertools
 import os
 import re
 import json
@@ -7,7 +8,8 @@ if not os.path.isdir('games'):
     exit('Please download games at first.')
 
 frameworks = ['Akashic', 'EasyRPG', 'GameMaker', 'RPGMaker', 'RPGMakerMZ', 'SUCCESS', 'Tonyu', 'Tyrano', 'Unity', 'VisualNovelMaker']
-framework_games = {key: [] for key in [*frameworks, 'other']}
+frameworks_2 = [f'{value}_2' for value in frameworks]
+framework_games = {key: [] for key in [*frameworks, *frameworks_2, 'other']}
 known_games = []
 
 if os.path.isfile('data/catagory.json'):
@@ -21,6 +23,7 @@ if os.path.isfile('data/catagory.json'):
 score = {}
 ignored_games = [
     55, 529, 596, 1250, 3477, 7764, 9022, 13915,
+    165,
     2742,
     3621, 3736, 3765,
     5404, 5461, 5530, 5608, 5614, 5749,
@@ -37,7 +40,12 @@ ignored_games = [
     29320, 29532, 29752, 29754,
 ]
 
-for game_root in (map(lambda game_id: f'games/gm{game_id}', framework_games['other']) if len(framework_games['other']) else ['games/']):
+if 'catagories' in locals().keys():
+    for games in filter(lambda item: item[0] not in frameworks, catagories.items()):
+        print(games[0], len(games[1]))
+
+# itertools.chain(*[map(lambda game_id: f'games/gm{game_id}', games[1]) for games in filter(lambda item: item[0] not in frameworks, framework_games.items())])
+for game_root in ['games/']:
     for dirpath, dirnames, filenames in os.walk(game_root):
         match = re.search(r'^games/gm([0-9]+)/[0-9]+$', dirpath)
         if match:
@@ -255,16 +263,14 @@ for game_root in (map(lambda game_id: f'games/gm{game_id}', framework_games['oth
                             score[game_id]['VisualNovelMaker'] += 1
                         else:
                             score[game_id]['other'] += 1
-                            if score[game_id]['Unity'] >= 1:
-                                print(game_id, script.attrs['src'])
+                            # if score[game_id]['Unity'] >= 1:
+                            #     print(game_id, script.attrs['src'])
                     else:
                         print(game_id, script)
                 if set(dirnames) == set(['fonts', 'icon', 'js']):
                     score[game_id]['RPGMaker'] += 1
                 elif set(dirnames) == set(['css', 'icon', 'js']):
                     score[game_id]['RPGMakerMZ'] += 1
-            # if 0 == score[game_id]['other'] < sum(score[game_id].values()):
-            #     break
 
 for game_id, game_score in sorted(score.items()):
     game_id = int(game_id)
@@ -277,12 +283,16 @@ for game_id, game_score in sorted(score.items()):
             framework_games[framework].append(game_id)
             is_other = False
             break
+        elif 1 <= game_score[framework] and game_score[framework] + game_score['other'] == sum(game_score.values()):
+            framework_games[f'{framework}_2'].append(game_id)
+            is_other = False
+            break
     if is_other:
         if 1 <= game_score['other'] < sum(game_score.values()):
             print(game_id, dict(sorted(game_score.items(), key=(lambda item: item[1]), reverse=True)[:2]))
             pass
         else:
-            # print(game_id, game_score['other'])
+            print(game_id, game_score['other'])
             pass
         framework_games['other'].append(game_id)
 

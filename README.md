@@ -5,11 +5,11 @@ game-atsumaru-discovery
 
 | [公開](data/public.txt) | [公開、会員限定](data/public_payment.txt) | [限定公開](data/key_valid.txt) | 非公開 |
 | ---: | -: | -----: | -------: |
-| 9469 | 21 | >= 306 | <= 19958 |
+| 9468 | 21 | >= 306 | <= 19959 |
 
 ## Framework (フレームワーク)
 
-| Framework                    | Count |
+| Framework                    | Count | Count (2) |
 | :--------------------------- | ----: |
 | [RPG Maker MV][MV]           |  5989 |
 | [RPG Maker MZ][MZ]           |  1331 |
@@ -67,6 +67,7 @@ game-atsumaru-discovery
 - 29320, 29532, 29752, 29754
 
 ### Vanilla JS
+- 165
 - 29249, 29267
 
 ## Usage
