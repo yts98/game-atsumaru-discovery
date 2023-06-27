@@ -343,15 +343,15 @@ def fetch_game(game_id, key=None):
             data_actor = json.load(r)
             for actor in data_actor:
                 if actor is not None:
-                    if 'characterName' in actor.keys():
+                    if isinstance(actor.get('characterName'), str):
                         character_names.add(actor['characterName'])
-                    if 'faceName' in actor.keys():
+                    if isinstance(actor.get('faceName'), str):
                         face_names.add(actor['faceName'])
-                    if 'battlerName' in actor.keys():
+                    if isinstance(actor.get('battlerName'), str):
                         actor_names.add(actor['battlerName'])
-                    if 'animation1Name' in actor.keys():
+                    if isinstance(actor.get('animation1Name'), str):
                         animation_names.add(actor['animation1Name'])
-                    if 'animation2Name' in actor.keys():
+                    if isinstance(actor.get('animation2Name'), str):
                         animation_names.add(actor['animation2Name'])
                     if 'timing' in actor.keys():
                         for timing in actor['timings']:
@@ -363,8 +363,10 @@ def fetch_game(game_id, key=None):
             data_animation = json.load(r)
             for animation in data_animation:
                 if animation is not None:
-                    animation_names.add(animation['animation1Name'])
-                    animation_names.add(animation['animation2Name'])
+                    if isinstance(animation['animation1Name'], str):
+                        animation_names.add(animation['animation1Name'])
+                    if isinstance(animation['animation2Name'], str):
+                        animation_names.add(animation['animation2Name'])
                     for timing in animation['timings']:
                         if timing['se'] is not None:
                             audio_names.add(('se', timing['se']['name']))
@@ -382,7 +384,8 @@ def fetch_game(game_id, key=None):
             data_enemies = json.load(r)
             for enemy in data_enemies:
                 if enemy is not None:
-                    enemy_names.add(enemy['battlerName'])
+                    if isinstance(enemy['battlerName'], str):
+                        enemy_names.add(enemy['battlerName'])
 
         assert os.path.isfile(os.path.join(game_path, 'data/Tilesets.json')), 'data/Tilesets.json'
         with open(os.path.join(game_path, 'data/Tilesets.json'), 'r', encoding='utf-8-sig') as r:
