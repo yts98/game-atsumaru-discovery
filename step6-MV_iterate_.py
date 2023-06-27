@@ -597,6 +597,11 @@ def main():
             else:
                 raise
 
+    while threading.active_count() > 1:
+        if ErrorInThread is not False:
+            raise ErrorInThread
+        time.sleep(1)
+
 
 try:
     main()
@@ -604,6 +609,7 @@ try:
 except KeyboardInterrupt:
     print('KeyboardInterrupt')
 finally:
+    print('', flush=True)
     my_pid = os.getpid()
     # kill all subprocesses
     os.killpg(os.getpgid(my_pid), signal.SIGTERM)
