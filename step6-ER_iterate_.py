@@ -130,21 +130,28 @@ for game_id, key in games:
             'easyrpg.soundfont',
         ]
 
+        def cache_recursion(property: dict, path_base: str):
+            for resource_key, resource_value in property.items():
+                if resource_key != '_dirname':
+                    if isinstance(resource_value, dict):
+                        assert '_dirname' in resource_value.keys(), resource_value.keys()
+                        cache_recursion(resource_value, os.path.join(path_base, property['_dirname']))
+                    else:
+                        assert isinstance(resource_value, str), resource_value
+                        resource_urls.append(os.path.join(path_base, property['_dirname'], resource_value))
+
         assert os.path.isfile(os.path.join(game_path, resource_path, 'index.json')), 'index.json'
         with open(os.path.join(game_path, resource_path, 'index.json'), 'r') as r:
             data_index = json.load(r)
             assert set(data_index.keys()) == set(['cache', 'metadata'])
             for key, property in data_index['cache'].items():
-                if key in ['easyrpg.soundfont', 'rpg_rt.ldb', 'rpg_rt.lmt', 'rpg_rt.ini'] \
+                if key in ['easyrpg.soundfont', 'harmony.dll', 'rpg_rt.ldb', 'rpg_rt.lmt', 'rpg_rt.ini'] \
                     or re.search(r'^map[0-9]+\.lmu$', key):
-                    assert isinstance(property, str), 'index.json'
+                    assert isinstance(property, str), ('index.json', key, property)
                     resource_urls.append(property)
                 else:
-                    assert isinstance(property, dict), 'index.json'
-                    assert '_dirname' in property.keys(), 'index.json'
-                    for resource_key, resource_name in property.items():
-                        if resource_key != '_dirname':
-                            resource_urls.append(os.path.join(property['_dirname'], resource_name))
+                    assert isinstance(property, dict), ('index.json', key, property)
+                    cache_recursion(property, '')
 
         for resource_url in sorted(set(resource_urls)):
             step_urls.append(os.path.join(resource_root, game_path, resource_path, resource_url))
