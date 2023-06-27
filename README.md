@@ -91,6 +91,14 @@ python step6-MZ_iterate_.py <gameId>
 python step6-MZ_iterate_.py <gameId_range_start> <gameId_range_end>
 ```
 
+### Fetch Akashic Engine resources
+
+```
+python step6-AK_iterate_.py
+python step6-AK_iterate_.py <gameId>
+python step6-AK_iterate_.py <gameId_range_start> <gameId_range_end>
+```
+
 ### Fetch EasyRPG Player resources (for RPG Maker 2000, RPG Maker 2003)
 
 ```
@@ -99,12 +107,12 @@ python step6-ER_iterate_.py <gameId>
 python step6-ER_iterate_.py <gameId_range_start> <gameId_range_end>
 ```
 
-### Fetch Akashic Engine resources
+### Fetch Unity resources
 
 ```
-python step6-AK_iterate_.py
-python step6-AK_iterate_.py <gameId>
-python step6-AK_iterate_.py <gameId_range_start> <gameId_range_end>
+python step6-UN_iterate_.py
+python step6-UN_iterate_.py <gameId>
+python step6-UN_iterate_.py <gameId_range_start> <gameId_range_end>
 ```
 
 ## Contribution
