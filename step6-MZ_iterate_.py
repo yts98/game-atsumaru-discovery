@@ -263,6 +263,9 @@ for game_id, key in games:
             'img/system/Shadow2.png',
             'img/system/States.png',
             'img/system/System.png',
+            'img/system/Weapons1.png',
+            'img/system/Weapons2.png',
+            'img/system/Weapons3.png',
             'img/system/Window.png',
         ]
 
@@ -456,7 +459,7 @@ for game_id, key in games:
         with open(os.path.join(game_path, 'js/rmmz_scenes.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/rmmz_scenes.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
-            for filename in re.findall(r"ImageManager\.(?:load|reserve|request)System\('([^']+)'\)", content):
+            for filename in re.findall(r"ImageManager\.(?:load|reserve|request)System\((?:\'|\")([^']+)(?:\'|\")\)", content):
                 # ImageManager.loadSystem
                 resource_urls.append(f'img/system/{filename}.png')
 
