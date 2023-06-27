@@ -152,7 +152,7 @@ for game_id, key in games:
         temp_dir.cleanup()
 
     except AssertionError as ex:
-        if temp_dir: temp_dir.cleanup()
+        if "temp_dir" in locals() and temp_dir: temp_dir.cleanup()
         now_string = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print(f'{now_string} gm{game_id} (GDJS) failed. {ex.args}')
         with open(f'data/iterate.txt', 'a') as a:
