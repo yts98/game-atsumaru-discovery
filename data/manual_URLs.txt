@@ -1,3 +1,30 @@
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/bgm/goraku iinkai.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/bgm/himatubusi.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/bgm/ra ra ra ragtime.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/se/Blow1.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/se/Book1.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/se/Buzzer1.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/se/Cancel1.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/se/Decision2.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/se/Decision2.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/se/Knock.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/se/Shop2.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/audio/se/se_start.ogg
+https://resource.game.nicovideo.jp/games/gm4409/18/data/Chars.json
+https://resource.game.nicovideo.jp/games/gm4409/18/data/Faceset.json
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/Background.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/Faceset.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/ReturnButton.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/StartButton.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/WindowBack.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/WindowBack2.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/WindowMask.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/arrow.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/arrow2.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/close.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/symbol_correct.png
+https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/symbol_incorrect.png
+
 https://resource.game.nicovideo.jp/games/gm5749/4/audio/bgm/huwahuwa.mp3
 https://resource.game.nicovideo.jp/games/gm5749/4/audio/se/jashin_serifu51.mp3
 https://resource.game.nicovideo.jp/games/gm5749/4/audio/se/jashin_serifu52.mp3

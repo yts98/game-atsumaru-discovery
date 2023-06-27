@@ -1,5 +1,5 @@
 core/
-data/tmp
+data/state.json
 games/
 ticket/
 warc/
