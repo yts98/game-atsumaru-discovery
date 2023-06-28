@@ -137,13 +137,16 @@ for game_id, key in games:
             for asset_key, asset_value in game_json_data['assets'].items():
                 assert isinstance(asset_value, dict), ('abnormal asset', type(asset_value))
                 assert set(asset_value.keys()).issuperset(set(['type', 'path'])), ('abnormal asset', asset_value.keys())
-                assert asset_value['type'] in ['image', 'audio', 'script', 'text'], ('abnormal asset type', asset_value['type'])
+                # 3.2.0 "vector-image" アセットに対応
+                assert asset_value['type'] in ['image', 'vector-image', 'audio', 'script', 'text'], ('abnormal asset type', asset_value['type'])
                 if asset_value['type'] == 'audio':
-                    assert not re.search(r'\.ogg$', asset_value['path']), ('abnormal audio path', asset_value['path'])
-                    assert re.search(r'/[^\/\.]+$', asset_value['path']), ('abnormal audio path', asset_value['path'])
-                    resource_urls.append(f'{asset_value["path"]}.ogg')
-                    resource_urls.append(f'{asset_value["path"]}.aac')
-                    resource_urls.append(f'{asset_value["path"]}.mp4')
+                    if re.search(r'/[^\/\.]+$', asset_value['path']):
+                        resource_urls.append(f'{asset_value["path"]}.ogg')
+                        resource_urls.append(f'{asset_value["path"]}.aac')
+                        resource_urls.append(f'{asset_value["path"]}.mp4')
+                    else:
+                        assert not re.search(r'/[^\/\.]+\./[^\/\.]+$', asset_value['path']), ('abnormal audio path', asset_value['path'])
+                        resource_urls.append(asset_value["path"])
                 else:
                     assert re.search(r'/[^\/]+\.[^\/\.]+$', asset_value['path']), ('abnormal path', asset_value['path'])
                     resource_urls.append(asset_value["path"])
