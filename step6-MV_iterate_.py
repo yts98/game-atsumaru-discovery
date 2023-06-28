@@ -129,7 +129,7 @@ def fetch_game(game_id, key=None):
         Decrypter = {}
 
         assert os.path.isfile(os.path.join(game_path, 'js/rpg_core.js')), 'js/rpg_core.js'
-        with open(os.path.join(game_path, 'js/rpg_core.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/rpg_core.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/rpg_core.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rpg_core.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             body = pyjsparser.parse(content)['body']
@@ -163,7 +163,7 @@ def fetch_game(game_id, key=None):
         audio_path = 'audio/'
 
         assert os.path.isfile(os.path.join(game_path, 'js/rpg_managers.js')), 'js/rpg_managers.js'
-        with open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             assert content.find("var url = 'data/' + src;") >= 0, 'js/rpg_managers.js'
@@ -206,7 +206,7 @@ def fetch_game(game_id, key=None):
                 glob_plugins = {}
 
             assert os.path.isfile(os.path.join(game_path, 'js/plugins.js')), 'js/plugins.js'
-            with open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='shift-jis') as rs:
+            with open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='shift-jis') as rs:
                 try: content = r.read()
                 except UnicodeDecodeError: content = rs.read()
                 body = pyjsparser.parse(content)['body']
@@ -243,7 +243,7 @@ def fetch_game(game_id, key=None):
         step_urls = []
 
         assert os.path.isfile(os.path.join(game_path, 'data/MapInfos.json')), 'data/MapInfos.json'
-        with open(os.path.join(game_path, 'data/MapInfos.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/MapInfos.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_mapinfo = json.load(r)
             for _map in data_mapinfo:
                 if _map is not None:
@@ -344,7 +344,7 @@ def fetch_game(game_id, key=None):
                     pass
 
         assert os.path.isfile(os.path.join(game_path, 'data/Actors.json')), 'data/Actors.json'
-        with open(os.path.join(game_path, 'data/Actors.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/Actors.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_actor = json.load(r)
             for actor in data_actor:
                 if actor is not None:
@@ -364,7 +364,7 @@ def fetch_game(game_id, key=None):
                                 audio_names.add(('se', timing['se']['name']))
 
         assert os.path.isfile(os.path.join(game_path, 'data/Animations.json')), 'data/Animations.json'
-        with open(os.path.join(game_path, 'data/Animations.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/Animations.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_animation = json.load(r)
             for animation in data_animation:
                 if animation is not None:
@@ -377,7 +377,7 @@ def fetch_game(game_id, key=None):
                             audio_names.add(('se', timing['se']['name']))
 
         assert os.path.isfile(os.path.join(game_path, 'data/CommonEvents.json')), 'data/CommonEvents.json'
-        with open(os.path.join(game_path, 'data/CommonEvents.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/CommonEvents.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_commonevents = json.load(r)
             for event in data_commonevents:
                 if event is not None:
@@ -385,7 +385,7 @@ def fetch_game(game_id, key=None):
                     parse_commandlist(event['list'])
 
         assert os.path.isfile(os.path.join(game_path, 'data/Enemies.json')), 'data/Enemies.json'
-        with open(os.path.join(game_path, 'data/Enemies.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/Enemies.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_enemies = json.load(r)
             for enemy in data_enemies:
                 if enemy is not None:
@@ -393,7 +393,7 @@ def fetch_game(game_id, key=None):
                         enemy_names.add(enemy['battlerName'])
 
         assert os.path.isfile(os.path.join(game_path, 'data/Tilesets.json')), 'data/Tilesets.json'
-        with open(os.path.join(game_path, 'data/Tilesets.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/Tilesets.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_tileset = json.load(r)
             for tileset in data_tileset:
                 if tileset is not None:
@@ -402,13 +402,13 @@ def fetch_game(game_id, key=None):
                     for tileset_name in tileset['tilesetNames']:
                         tileset_names.add(tileset_name)
 
-        with open(os.path.join(game_path, 'data/MapInfos.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/MapInfos.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_mapinfo = json.load(r)
             for _map in data_mapinfo:
                 if _map is not None:
                     map_path = os.path.join(game_path, f'data/Map{_map["id"]:03}.json')
                     if os.path.isfile(map_path):
-                        with open(map_path, 'r', encoding='utf-8-sig') as rm:
+                        with open(map_path, 'r', encoding='utf-8-sig', errors='ignore') as rm:
                             data_map = json.load(rm)
                             audio_names.add(('bgm', data_map['bgm']['name']))
                             audio_names.add(('bgm', data_map['bgs']['name']))
@@ -419,7 +419,7 @@ def fetch_game(game_id, key=None):
                                         parse_commandlist(page['list'])
 
         assert os.path.isfile(os.path.join(game_path, 'data/System.json')), 'data/System.json'
-        with open(os.path.join(game_path, 'data/System.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/System.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_system = json.load(r)
             assert set(data_system.keys()).issuperset(set([
                 'airship', 'boat', 'ship',
@@ -450,14 +450,14 @@ def fetch_game(game_id, key=None):
                 resource_urls.append(f'img/titles2/{data_system["title2Name"]}.png')
 
         assert os.path.isfile(os.path.join(game_path, 'js/rpg_managers.js')), 'js/rpg_managers.js'
-        with open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             for filename in re.findall(r"Graphics\.setLoadingImage\('([^']+)'\)", content):
                 resource_urls.append(filename)
 
         assert os.path.isfile(os.path.join(game_path, 'js/rpg_scenes.js')), 'js/rpg_scenes.js'
-        with open(os.path.join(game_path, 'js/rpg_scenes.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/rpg_scenes.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/rpg_scenes.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rpg_scenes.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             for filename in re.findall(r"ImageManager\.(?:load|reserve|request)System\((?:\'|\")([^']+)(?:\'|\")\)", content):
