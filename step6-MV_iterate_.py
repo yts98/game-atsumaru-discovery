@@ -65,7 +65,14 @@ with open('data/catagory.json', 'r') as r:
 games = list(filter(lambda item: item[0] in framework_games['RPGMaker'], games))
 games.sort()
 
-if len(sys.argv) >= 3 and re.search('^[0-9]+$', sys.argv[1]) and re.search('^[0-9]+$', sys.argv[2]):
+if len(sys.argv) >= 3 and sys.argv[1].strip() == '-':
+    white_list = []
+    for arg in sys.argv[2:]:
+        if re.search('^[0-9]+$', arg): white_list.append(int(arg))
+    games = list(filter(lambda item: item[0] in white_list, games))
+    if len(games):
+        print(f'Fetching {", ".join(map(lambda g: f"gm{g[0]}", games))}')
+elif len(sys.argv) >= 3 and re.search('^[0-9]+$', sys.argv[1]) and re.search('^[0-9]+$', sys.argv[2]):
     games = list(filter(lambda item: int(sys.argv[1]) <= item[0] <= int(sys.argv[2]), games))
     if len(games):
         print(f'Fetching gm{games[0][0]} ~ gm{games[-1][0]}')
@@ -368,13 +375,18 @@ def fetch_game(game_id, key=None):
             data_animation = json.load(r)
             for animation in data_animation:
                 if animation is not None:
-                    if isinstance(animation['animation1Name'], str):
+                    if isinstance(animation.get('animation1Name'), str):
                         animation_names.add(animation['animation1Name'])
-                    if isinstance(animation['animation2Name'], str):
+                    if isinstance(animation.get('animation2Name'), str):
                         animation_names.add(animation['animation2Name'])
-                    for timing in animation['timings']:
-                        if timing['se'] is not None:
-                            audio_names.add(('se', timing['se']['name']))
+                    if 'soundTimings' in animation.keys():
+                        for timing in animation['soundTimings']:
+                            if timing['se'] is not None:
+                                audio_names.add(('se', timing['se']['name']))
+                    if 'timings' in animation.keys():
+                        for timing in animation['timings']:
+                            if timing['se'] is not None:
+                                audio_names.add(('se', timing['se']['name']))
 
         assert os.path.isfile(os.path.join(game_path, 'data/CommonEvents.json')), 'data/CommonEvents.json'
         with open(os.path.join(game_path, 'data/CommonEvents.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:

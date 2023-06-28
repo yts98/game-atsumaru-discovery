@@ -55,7 +55,14 @@ with open('data/catagory.json', 'r') as r:
 games = list(filter(lambda item: item[0] in framework_games['RPGMakerMZ'], games))
 games.sort()
 
-if len(sys.argv) >= 3 and re.search('^[0-9]+$', sys.argv[1]) and re.search('^[0-9]+$', sys.argv[2]):
+if len(sys.argv) >= 3 and sys.argv[1].strip() == '-':
+    white_list = []
+    for arg in sys.argv[2:]:
+        if re.search('^[0-9]+$', arg): white_list.append(int(arg))
+    games = list(filter(lambda item: item[0] in white_list, games))
+    if len(games):
+        print(f'Fetching {", ".join(map(lambda g: f"gm{g[0]}", games))}')
+elif len(sys.argv) >= 3 and re.search('^[0-9]+$', sys.argv[1]) and re.search('^[0-9]+$', sys.argv[2]):
     games = list(filter(lambda item: int(sys.argv[1]) <= item[0] <= int(sys.argv[2]), games))
     if len(games):
         print(f'Fetching gm{games[0][0]} ~ gm{games[-1][0]}')
@@ -108,7 +115,7 @@ for game_id, key in games:
         script_urls = []
 
         assert os.path.isfile(os.path.join(game_path, 'js/main.js')), 'js/main.js'
-        with open(os.path.join(game_path, 'js/main.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/main.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/main.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/main.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             # ClassDeclaration is not supported by ECMA 5.1.
@@ -151,7 +158,7 @@ for game_id, key in games:
         step_urls = []
 
         assert os.path.isfile(os.path.join(game_path, 'js/rmmz_core.js')), 'js/rmmz_core.js'
-        with open(os.path.join(game_path, 'js/rmmz_core.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/rmmz_core.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/rmmz_core.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rmmz_core.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             assert content.find('Utils.setEncryptionInfo = function(hasImages, hasAudio, key) {') >= 0
@@ -159,7 +166,7 @@ for game_id, key in games:
         audio_path = 'audio/'
 
         assert os.path.isfile(os.path.join(game_path, 'js/rmmz_managers.js')), 'js/rmmz_managers.js'
-        with open(os.path.join(game_path, 'js/rmmz_managers.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/rmmz_managers.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/rmmz_managers.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rmmz_managers.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             assert content.find('const url = "data/" + src;') >= 0, 'js/rmmz_managers.js'
@@ -204,7 +211,7 @@ for game_id, key in games:
             glob_plugins = {}
 
         assert os.path.isfile(os.path.join(game_path, 'js/plugins.js')), 'js/plugins.js'
-        with open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/plugins.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             body = pyjsparser.parse(content)['body']
@@ -240,7 +247,7 @@ for game_id, key in games:
         step_urls = []
 
         assert os.path.isfile(os.path.join(game_path, 'data/MapInfos.json')), 'data/MapInfos.json'
-        with open(os.path.join(game_path, 'data/MapInfos.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/MapInfos.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_mapinfo = json.load(r)
             for _map in data_mapinfo:
                 if _map is not None:
@@ -264,6 +271,7 @@ for game_id, key in games:
         resource_urls = [
             'img/system/Balloon.png',
             'img/system/ButtonSet.png',
+            'img/system/Damage.png',
             'img/system/GameOver.png',
             'img/system/IconSet.png',
             'img/system/Loading.png',
@@ -347,17 +355,17 @@ for game_id, key in games:
                     pass
 
         assert os.path.isfile(os.path.join(game_path, 'data/Actors.json')), 'data/Actors.json'
-        with open(os.path.join(game_path, 'data/Actors.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/Actors.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_actor = json.load(r)
             for actor in data_actor:
                 if actor is not None:
-                    if 'characterName' in actor.keys():
+                    if isinstance(actor.get('characterName'), str):
                         character_names.add(actor['characterName'])
-                    if 'faceName' in actor.keys():
+                    if isinstance(actor.get('faceName'), str):
                         face_names.add(actor['faceName'])
-                    if 'battlerName' in actor.keys():
+                    if isinstance(actor.get('battlerName'), str):
                         actor_names.add(actor['battlerName'])
-                    if 'effectName' in actor.keys():
+                    if isinstance(actor.get('effectName'), str):
                         effect_names.add(actor['effectName'])
                     if 'timing' in actor.keys():
                         for timing in actor['timings']:
@@ -365,11 +373,11 @@ for game_id, key in games:
                                 audio_names.add(('se', timing['se']['name']))
 
         assert os.path.isfile(os.path.join(game_path, 'data/Animations.json')), 'data/Animations.json'
-        with open(os.path.join(game_path, 'data/Animations.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/Animations.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_animation = json.load(r)
             for animation in data_animation:
                 if animation is not None:
-                    if 'effectName' in animation.keys():
+                    if isinstance(animation.get('effectName'), str):
                         effect_names.add(animation['effectName'])
                     if 'soundTimings' in animation.keys():
                         for timing in animation['soundTimings']:
@@ -381,7 +389,7 @@ for game_id, key in games:
                                 audio_names.add(('se', timing['se']['name']))
 
         assert os.path.isfile(os.path.join(game_path, 'data/CommonEvents.json')), 'data/CommonEvents.json'
-        with open(os.path.join(game_path, 'data/CommonEvents.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/CommonEvents.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_commonevents = json.load(r)
             for event in data_commonevents:
                 if event is not None:
@@ -389,14 +397,15 @@ for game_id, key in games:
                     parse_commandlist(event['list'])
 
         assert os.path.isfile(os.path.join(game_path, 'data/Enemies.json')), 'data/Enemies.json'
-        with open(os.path.join(game_path, 'data/Enemies.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/Enemies.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_enemies = json.load(r)
             for enemy in data_enemies:
                 if enemy is not None:
-                    enemy_names.add(enemy['battlerName'])
+                    if isinstance(enemy.get('battlerName'), str):
+                        enemy_names.add(enemy['battlerName'])
 
         assert os.path.isfile(os.path.join(game_path, 'data/Tilesets.json')), 'data/Tilesets.json'
-        with open(os.path.join(game_path, 'data/Tilesets.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/Tilesets.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_tileset = json.load(r)
             for tileset in data_tileset:
                 if tileset is not None:
@@ -405,13 +414,13 @@ for game_id, key in games:
                     for tileset_name in tileset['tilesetNames']:
                         tileset_names.add(tileset_name)
 
-        with open(os.path.join(game_path, 'data/MapInfos.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/MapInfos.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_mapinfo = json.load(r)
             for _map in data_mapinfo:
                 if _map is not None:
                     map_path = os.path.join(game_path, f'data/Map{_map["id"]:03}.json')
                     if os.path.isfile(map_path):
-                        with open(map_path, 'r', encoding='utf-8-sig') as rm:
+                        with open(map_path, 'r', encoding='utf-8-sig', errors='ignore') as rm:
                             data_map = json.load(rm)
                             audio_names.add(('bgm', data_map['bgm']['name']))
                             audio_names.add(('bgm', data_map['bgs']['name']))
@@ -424,7 +433,7 @@ for game_id, key in games:
         Decrypter = {}
 
         assert os.path.isfile(os.path.join(game_path, 'data/System.json')), 'data/System.json'
-        with open(os.path.join(game_path, 'data/System.json'), 'r', encoding='utf-8-sig') as r:
+        with open(os.path.join(game_path, 'data/System.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_system = json.load(r)
             assert set(data_system.keys()).issuperset(set([
                 'advanced',
@@ -467,14 +476,14 @@ for game_id, key in games:
                 resource_urls.append(f'img/titles2/{data_system["title2Name"]}.png')
 
         assert os.path.isfile(os.path.join(game_path, 'js/rmmz_managers.js')), 'js/rmmz_managers.js'
-        with open(os.path.join(game_path, 'js/rmmz_managers.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/rmmz_managers.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/rmmz_managers.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rmmz_managers.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             for filename in re.findall(r"Graphics\.setLoadingImage\('([^']+)'\)", content):
                 resource_urls.append(filename)
 
         assert os.path.isfile(os.path.join(game_path, 'js/rmmz_scenes.js')), 'js/rmmz_scenes.js'
-        with open(os.path.join(game_path, 'js/rmmz_scenes.js'), 'r', encoding='utf-8-sig') as r, open(os.path.join(game_path, 'js/rmmz_scenes.js'), 'r', encoding='shift-jis') as rs:
+        with open(os.path.join(game_path, 'js/rmmz_scenes.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rmmz_scenes.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
             for filename in re.findall(r"ImageManager\.(?:load|reserve|request)System\((?:\'|\")([^']+)(?:\'|\")\)", content):
