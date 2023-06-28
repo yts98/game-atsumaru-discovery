@@ -109,34 +109,46 @@ for game_id, key in games:
         step_urls = []
         resource_urls = []
 
+        game_json_data = None
+
         assert os.path.isfile(os.path.join(game_path, 'index.html')), 'index.html'
         with open(os.path.join(game_path, 'index.html'), 'r') as r:
             content = r.read()
             json_like = re.search(r'window\.gLocalAssetContainer\[\"game\.json\"\] *= *((?:\'|\")\{[^\n]+\}(?:\'|\"));?', content)
             if json_like:
                 json_string = urllib.parse.unquote_plus(json.loads(json_like[1]))
-                json_data = json.loads(json_string)
-                # print(json.dumps(json_data, separators=(',',':')))
-                assert set(json_data.keys()).issuperset(set(['assets'])), ('key missing', json_data.keys())
-                for key, item in json_data.items():
-                    if key not in ['width', 'height', 'fps', 'main', 'assets', 'operationPlugins', 'defaultLoadingScene', 'environment', 'globalScripts', 'moduleMainScripts', 'exportZipInfo']:
-                        assert not isinstance(item, dict), key
-                assert isinstance(json_data['assets'], dict), type(json_data['assets'])
-                for asset_key, asset_value in json_data['assets'].items():
-                    assert isinstance(asset_value, dict), ('abnormal asset', type(asset_value))
-                    assert set(asset_value.keys()).issuperset(set(['type', 'path'])), ('abnormal asset', asset_value.keys())
-                    assert asset_value['type'] in ['image', 'audio', 'script', 'text'], ('abnormal asset type', asset_value['type'])
-                    if asset_value['type'] == 'audio':
-                        assert not re.search(r'\.ogg$', asset_value['path']), ('abnormal audio path', asset_value['path'])
-                        assert re.search(r'/[^\/\.]+$', asset_value['path']), ('abnormal audio path', asset_value['path'])
-                        resource_urls.append(f'{asset_value["path"]}.ogg')
-                        resource_urls.append(f'{asset_value["path"]}.aac')
-                        resource_urls.append(f'{asset_value["path"]}.mp4')
-                    else:
-                        assert re.search(r'/[^\/]+\.[^\/\.]+$', asset_value['path']), ('abnormal path', asset_value['path'])
-                        resource_urls.append(asset_value["path"])
-            else:
-                raise NotImplementedError('unknown HTML', game_url)
+                game_json_data = json.loads(json_string)
+
+        if not game_json_data and os.path.isfile(os.path.join(game_path, 'js/game.json.js')):
+            with open(os.path.join(game_path, 'js/game.json.js'), 'r') as r:
+                content = r.read()
+                json_like = re.search(r'window\.gLocalAssetContainer\[\"game\.json\"\] *= *((?:\'|\")\{[^\n]+\}(?:\'|\"));?', content)
+                if json_like:
+                    json_string = urllib.parse.unquote_plus(json.loads(json_like[1]))
+                    game_json_data = json.loads(json_string)
+
+        # print(json.dumps(game_json_data, separators=(',',':')))
+        if game_json_data:
+            assert set(game_json_data.keys()).issuperset(set(['assets'])), ('key missing', game_json_data.keys())
+            for key, item in game_json_data.items():
+                if key not in ['width', 'height', 'fps', 'main', 'assets', 'operationPlugins', 'defaultLoadingScene', 'environment', 'globalScripts', 'moduleMainScripts', 'exportZipInfo']:
+                    assert not isinstance(item, dict), key
+            assert isinstance(game_json_data['assets'], dict), type(game_json_data['assets'])
+            for asset_key, asset_value in game_json_data['assets'].items():
+                assert isinstance(asset_value, dict), ('abnormal asset', type(asset_value))
+                assert set(asset_value.keys()).issuperset(set(['type', 'path'])), ('abnormal asset', asset_value.keys())
+                assert asset_value['type'] in ['image', 'audio', 'script', 'text'], ('abnormal asset type', asset_value['type'])
+                if asset_value['type'] == 'audio':
+                    assert not re.search(r'\.ogg$', asset_value['path']), ('abnormal audio path', asset_value['path'])
+                    assert re.search(r'/[^\/\.]+$', asset_value['path']), ('abnormal audio path', asset_value['path'])
+                    resource_urls.append(f'{asset_value["path"]}.ogg')
+                    resource_urls.append(f'{asset_value["path"]}.aac')
+                    resource_urls.append(f'{asset_value["path"]}.mp4')
+                else:
+                    assert re.search(r'/[^\/]+\.[^\/\.]+$', asset_value['path']), ('abnormal path', asset_value['path'])
+                    resource_urls.append(asset_value["path"])
+        else:
+            raise NotImplementedError('unknown HTML', game_url)
 
         for resource_url in sorted(set(resource_urls)):
             step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(resource_url, safe='/')))
