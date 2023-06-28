@@ -55,7 +55,14 @@ with open('data/catagory.json', 'r') as r:
 games = list(filter(lambda item: item[0] in framework_games['Akashic'], games))
 games.sort()
 
-if len(sys.argv) >= 3 and re.search('^[0-9]+$', sys.argv[1]) and re.search('^[0-9]+$', sys.argv[2]):
+if len(sys.argv) >= 3 and sys.argv[1].strip() == '-':
+    white_list = []
+    for arg in sys.argv[2:]:
+        if re.search('^[0-9]+$', arg): white_list.append(int(arg))
+    games = list(filter(lambda item: item[0] in white_list, games))
+    if len(games):
+        print(f'Fetching {", ".join(map(lambda g: f"gm{g[0]}", games))}')
+elif len(sys.argv) >= 3 and re.search('^[0-9]+$', sys.argv[1]) and re.search('^[0-9]+$', sys.argv[2]):
     games = list(filter(lambda item: int(sys.argv[1]) <= item[0] <= int(sys.argv[2]), games))
     if len(games):
         print(f'Fetching gm{games[0][0]} ~ gm{games[-1][0]}')
@@ -145,10 +152,9 @@ for game_id, key in games:
                         resource_urls.append(f'{asset_value["path"]}.aac')
                         resource_urls.append(f'{asset_value["path"]}.mp4')
                     else:
-                        assert not re.search(r'/[^\/\.]+\./[^\/\.]+$', asset_value['path']), ('abnormal audio path', asset_value['path'])
                         resource_urls.append(asset_value["path"])
                 else:
-                    assert re.search(r'/[^\/]+\.[^\/\.]+$', asset_value['path']), ('abnormal path', asset_value['path'])
+                    assert re.search(r'[^\/]+\.[^\/\.]+$', asset_value['path']), ('abnormal path', asset_value['path'])
                     resource_urls.append(asset_value["path"])
         else:
             raise NotImplementedError('unknown HTML', game_url)
