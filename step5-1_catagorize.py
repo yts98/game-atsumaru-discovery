@@ -40,6 +40,10 @@ ignored_games = [
     29320, 29532, 29752, 29754,
 ]
 
+removed_games = [
+    15714, 24562, 27858,
+]
+
 if 'catagories' in locals().keys():
     for games in filter(lambda item: item[0] not in frameworks, catagories.items()):
         print(games[0], len(games[1]))
@@ -51,7 +55,7 @@ for game_root in ['games/']:
         if match:
             assert 'index.html' in filenames, filenames
             game_id = int(match[1])
-            if game_id in known_games:
+            if game_id in known_games or game_id in removed_games:
                 continue
             score[game_id] = dict.fromkeys([*frameworks, 'other'], 0)
             if game_id in ignored_games:
