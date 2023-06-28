@@ -135,7 +135,7 @@ def fetch_game(game_id, key=None):
 
         Decrypter = {}
 
-        assert os.path.isfile(os.path.join(game_path, 'js/rpg_core.js')), 'js/rpg_core.js'
+        assert os.path.isfile(os.path.join(game_path, 'js/rpg_core.js')), ('js/rpg_core.js', 'no file')
         with open(os.path.join(game_path, 'js/rpg_core.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rpg_core.js'), 'r', encoding='shift-jis') as rs:
             try: content = r.read()
             except UnicodeDecodeError: content = rs.read()
@@ -148,7 +148,7 @@ def fetch_game(game_id, key=None):
                             and node['expression']['left']['object']['name'] == 'Decrypter'
                             and node['expression']['left']['property']['type'] == 'Identifier'
                             and node['expression']['left']['property']['name'] in ['hasEncryptedImages', 'hasEncryptedAudio'], body):
-                assert node['expression']['right']['type'] == 'Literal', 'js/rpg_core.js'
+                assert node['expression']['right']['type'] == 'Literal', ('js/rpg_core.js', node['expression'])
                 Decrypter[node['expression']['left']['property']['name']] = node['expression']['right']['value']
             for node in filter(lambda node: node['type'] == 'ExpressionStatement'
                             and node['expression']['type'] == 'AssignmentExpression'
@@ -158,10 +158,10 @@ def fetch_game(game_id, key=None):
                             and node['expression']['left']['object']['name'] == 'Decrypter'
                             and node['expression']['left']['property']['type'] == 'Identifier'
                             and node['expression']['left']['property']['name'] == '_ignoreList', body):
-                assert node['expression']['right']['type'] == 'ArrayExpression', 'js/rpg_core.js'
+                assert node['expression']['right']['type'] == 'ArrayExpression', ('js/rpg_core.js', node['expression'])
                 Decrypter['_ignoreList'] = []
                 for ignore_img in node['expression']['right']['elements']:
-                    assert ignore_img['type'] == 'Literal', 'js/rpg_core.js'
+                    assert ignore_img['type'] == 'Literal', ('js/rpg_core.js', ignore_img)
                     Decrypter['_ignoreList'].append(ignore_img['value'])
 
         if len(Decrypter.keys()) >= 1:
@@ -305,6 +305,8 @@ def fetch_game(game_id, key=None):
 
         def parse_commandlist(eventlist):
             for child in eventlist:
+                if 'code' not in child.keys():
+                    continue
                 # Show Text
                 if child['code'] in [101]: face_names.add(child['parameters'][0])
                 # Change Battle BGM
