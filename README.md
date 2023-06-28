@@ -5,7 +5,7 @@ game-atsumaru-discovery
 
 | [公開](data/public.txt) | [公開、会員限定](data/public_payment.txt) | [限定公開](data/key_valid.txt) | 非公開 |
 | ---: | -: | -----: | -------: |
-| 9468 | 21 | >= 306 | <= 19959 |
+| 9467 | 21 | >= 306 | <= 19960 |
 
 ## Framework (フレームワーク)
 
@@ -120,22 +120,22 @@ python step6-UN_iterate_.py <gameId_range_start> <gameId_range_end>
 
 ## Contribution
 
-- Game Atsumaru will shut down at 12pm (UTC+9) on June 28, 2023.
+- Game Atsumaru went offline around 12pm on June 28, 2023 (JST, UTC+9).
 
-- You could claim an `gameId` range in https://pad.notkiska.pw/p/game-atsumaru .
+- ~~You could claim an `gameId` range in https://pad.notkiska.pw/p/game-atsumaru . ~~
 
-- Inform `yts98` on `#archiveteam-bs@irc.hackint.org` before the deadline if:
-    - You encountered an exception during script execution.
-    - You're willing to reverse engineer one or more game frameworks or games that do not use frameworks.
-        - You have ability to derive a list of resource URLs from games using frameworks.
-        - You have ability to identify interactive API calls including:
-            - `window.RPGAtsumaru.comment.changeScene(sceneName: string)`
-            - `window.RPGAtsumaru.comment.resetAndChangeScene(sceneName: string)`
-            - `window.RPGAtsumaru.scoreboards.setRecord(boardId: number, score: number)`
-            - `window.RPGAtsumaru.scoreboards.display(boardId: number)`
-        - You have ability to deobfuscate JavaScript or disassemble WASM for games that do not use frameworks.
-    - You found any uncategorized games that actually fall into the above frameworks.
-    - You have a list of resource URLs for a specific game.
-        - You can open the browser devtool and play the game throughly.
-    - You found a game available elsewhere, and you're sure they're identical.
-    - You found more unlisted games (removing the `key` parameter from the URL will make it inaccessible).
+- ~~ Inform `yts98` on `#archiveteam-bs@irc.hackint.org` before the deadline if: ~~
+    - ~~ You encountered an exception during script execution. ~~
+    - ~~ You're willing to reverse engineer one or more game frameworks or games that do not use frameworks. ~~
+        - ~~ You have ability to derive a list of resource URLs from games using frameworks. ~~
+        - ~~ You have ability to identify interactive API calls including: ~~
+            - ~~ `window.RPGAtsumaru.comment.changeScene(sceneName: string)` ~~
+            - ~~ `window.RPGAtsumaru.comment.resetAndChangeScene(sceneName: string)` ~~
+            - ~~ `window.RPGAtsumaru.scoreboards.setRecord(boardId: number, score: number)` ~~
+            - ~~ `window.RPGAtsumaru.scoreboards.display(boardId: number)` ~~
+        - ~~ You have ability to deobfuscate JavaScript or disassemble WASM for games that do not use frameworks. ~~
+    - ~~ You found any uncategorized games that actually fall into the above frameworks. ~~
+    - ~~ You have a list of resource URLs for a specific game. ~~
+        - ~~ You can open the browser devtool and play the game throughly. ~~
+    - ~~ You found a game available elsewhere, and you're sure they're identical. ~~
+    - ~~ You found more unlisted games (removing the `key` parameter from the URL will make it inaccessible). ~~

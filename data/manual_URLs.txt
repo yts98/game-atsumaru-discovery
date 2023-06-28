@@ -25,6 +25,9 @@ https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/close.png
 https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/symbol_correct.png
 https://resource.game.nicovideo.jp/games/gm4409/18/img/pictures/symbol_incorrect.png
 
+https://resource.game.nicovideo.jp/games/gm4495/78/data/particles/particles.json
+https://resource.game.nicovideo.jp/games/gm4495/78/data/originals/Database.json
+
 https://resource.game.nicovideo.jp/games/gm5749/4/audio/bgm/huwahuwa.mp3
 https://resource.game.nicovideo.jp/games/gm5749/4/audio/se/jashin_serifu51.mp3
 https://resource.game.nicovideo.jp/games/gm5749/4/audio/se/jashin_serifu52.mp3

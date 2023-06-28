@@ -1,0 +1,13 @@
+gm10256 (MV): 'name'
+gm8298 (MV): 'shift_jis' codec can't decode byte 0x89 in position 12868: illegal multibyte sequence
+gm8298 (MV): 'euc_jp' codec can't decode byte 0xe6 in position 12863: illegal multibyte sequence
+gm8298 (MV): binary mode doesn't take an encoding argument
+gm8298 (MV): 'shift_jis' codec can't decode byte 0x89 in position 12868: illegal multibyte sequence
+gm17614 (MV): 'animation1Name'
+gm19117 (MV): 'data'
+gm9445 (MV): 'code'
+gm9445 (MV): 'code'
+gm19117 (MV): 'data'
+gm25516 (MV): Unterminated string starting at: line 24 column 1489 (char 94827)
+gm23204 (MV): 'data'
+gm23553 (MV): Line 2651: ArrowFunctionExpression is not supported by ECMA 5.1.

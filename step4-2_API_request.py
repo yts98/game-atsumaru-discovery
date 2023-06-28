@@ -8,6 +8,9 @@ import requests
 if not os.path.isfile('data/public.txt') or not os.path.isfile('data/key_valid.txt'):
     exit('Please check public and unlisted game_ids at first.')
 
+if not os.path.isdir('./data/state'):
+    os.mkdir('./data/state')
+
 games = []
 
 with open('data/public.txt', 'r') as r, open('data/key_valid.txt', 'r') as rk:
@@ -17,12 +20,6 @@ with open('data/public.txt', 'r') as r, open('data/key_valid.txt', 'r') as rk:
         games.append((int(match[1]), match[2]))
 
 games.sort()
-
-if os.path.isfile('data/state.json'):
-    with open('data/state.json', 'r') as r:
-        glob_states = json.load(r)
-else:
-    glob_states = {}
 
 # TODO: analyze games to discover more scenes (leafCodes)!
 
@@ -51,7 +48,7 @@ get_headers = {
 
 for game_id, key in games:
     game_id = str(game_id)
-    if game_id in glob_states.keys():
+    if os.path.isfile(f'data/state/state_gm{game_id}.json'):
         continue
     print(f'gm{game_id}')
 
@@ -103,16 +100,10 @@ for game_id, key in games:
     with open('data/leaf_codes.json', 'w') as w:
         json.dump(discovered_leaf_codes, w, separators=(',', ':'))
 
-    glob_states[game_id] = glob_state
+    with open(f'data/state/state_gm{game_id}.json', 'w') as w:
+        json.dump(glob_state, w, separators=(',', ':'))
 
-    with open('data/state.json', 'w') as w:
-        json.dump(glob_states, w, separators=(',', ':'))
-
-glob_states = dict(sorted(glob_states.items(), key=(lambda item: int(item[0]))))
 discovered_leaf_codes = dict(sorted(discovered_leaf_codes.items(), key=(lambda item: int(item[0]))))
-
-with open('data/state.json', 'w') as w:
-    json.dump(glob_states, w, separators=(',', ':'))
 
 with open('data/leaf_codes.json', 'w') as w:
     json.dump(discovered_leaf_codes, w, separators=(',', ':'))

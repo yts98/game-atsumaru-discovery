@@ -168,6 +168,21 @@ def fetch_game(game_id, key=None):
             print(Decrypter)
 
         audio_path = 'audio/'
+        database_files = [
+            'Actors.json',
+            'Classes.json',
+            'Skills.json',
+            'Items.json',
+            'Weapons.json',
+            'Armors.json',
+            'Enemies.json',
+            'Troops.json',
+            'States.json',
+            'Animations.json',
+            'Tilesets.json',
+            'CommonEvents.json',
+            'MapInfos.json',
+        ]
 
         assert os.path.isfile(os.path.join(game_path, 'js/rpg_managers.js')), 'js/rpg_managers.js'
         with open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='utf-8-sig', errors='ignore') as r, open(os.path.join(game_path, 'js/rpg_managers.js'), 'r', encoding='shift-jis') as rs:
@@ -189,7 +204,7 @@ def fetch_game(game_id, key=None):
                     assert database_file['type'] == 'ObjectExpression'
                     database_file_src = list(filter(lambda node: node['key']['type'] == 'Identifier' and node['key']['name'] == 'src', database_file["properties"]))[0]['value']['value']
                     # DataManager.loadDatabase = function() {}
-                    step_urls.append(os.path.join(resource_root, game_path, f'data/{database_file_src}'))
+                    database_files.append(database_file_src)
             # AudioManager._path = 'audio/';
             for node in filter(lambda node: node['type'] == 'ExpressionStatement'
                             and node['expression']['type'] == 'AssignmentExpression'
@@ -234,8 +249,11 @@ def fetch_game(game_id, key=None):
             with open('data/MV_plugins.json', 'w') as w:
                 json.dump(glob_plugins, w)
 
+        for database_file in sorted(set(database_files)):
+            step_urls.append(os.path.join(resource_root, game_path, 'data/', database_file))
+
         with open(temp_urllist, 'w') as w:
-            for url in step_urls: print(url, file=w)
+            for url in sorted(set(step_urls)): print(url, file=w)
         cp = subprocess.run(f'wget --execute="robots=off" --no-verbose --input-file={temp_urllist} --force-directories --no-host-directories \
                 --header="Host: resource.game.nicovideo.jp" --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0" \
                 {cookie_argument} \
@@ -249,12 +267,12 @@ def fetch_game(game_id, key=None):
         discovered_urls.extend(step_urls)
         step_urls = []
 
-        assert os.path.isfile(os.path.join(game_path, 'data/MapInfos.json')), 'data/MapInfos.json'
+        assert os.path.isfile(os.path.join(game_path, 'data/MapInfos.json')), ('data/MapInfos.json not exists')
         with open(os.path.join(game_path, 'data/MapInfos.json'), 'r', encoding='utf-8-sig', errors='ignore') as r:
             data_mapinfo = json.load(r)
             for _map in data_mapinfo:
                 if _map is not None:
-                    assert isinstance(_map.get('id'), int), 'data/MapInfos.json'
+                    assert isinstance(_map.get('id'), int), ('data/MapInfos.json', _map.get('id'))
                     # DataManager.loadMapData = function(mapId) {}
                     step_urls.append(os.path.join(resource_root, game_path, f'data/Map{_map["id"]:03}.json'))
 
