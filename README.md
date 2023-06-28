@@ -9,19 +9,19 @@ game-atsumaru-discovery
 
 ## Framework (フレームワーク)
 
-| Framework                    | Count | Count (2) |
-| :--------------------------- | ----: |
-| [RPG Maker MV][MV]           |  5989 |
-| [RPG Maker MZ][MZ]           |  1331 |
-| [Akashic Engine][AK]         |  1019 |
-| [EasyRPG Player][ER]         |   299 |
-| [TyranoBuilder][TY]          |   250 |
-| [Unity][UN]                  |   185 |
-| [SUCCESS Corporation][SU]    |    85 |
-| [GameMaker Studio][GM]       |    21 |
-| [Tonyu System][TO]           |    15 |
-| [Visual Novel Maker][VN]     |    11 |
-| Others                       |   564 |
+| Framework                    | Count | Reclassify |
+| :--------------------------- | ----: | ---------: |
+| [RPG Maker MV][MV]           |  5988 |         42 |
+| [RPG Maker MZ][MZ]           |  1332 |          0 |
+| [Akashic Engine][AK]         |  1019 |          3 |
+| [EasyRPG Player][ER]         |   299 |          0 |
+| [TyranoBuilder][TY]          |   250 |         10 |
+| [Unity][UN]                  |   185 |        135 |
+| [SUCCESS Corporation][SU]    |    85 |          0 |
+| [GameMaker Studio][GM]       |    27 |          0 |
+| [Tonyu System][TO]           |    15 |          0 |
+| [Visual Novel Maker][VN]     |    11 |          0 |
+| Others                       |   375 |            |
 
 [MV]: https://rpgmakerofficial.com/product/mv/
 [MZ]: https://rpgmakerofficial.com/product/mz/
