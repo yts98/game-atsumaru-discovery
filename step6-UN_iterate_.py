@@ -108,8 +108,8 @@ for game_id, key in games:
 
         discovered_urls = []
         step_urls = []
-        resource_urls = []
         UNITY_WEBGL_BUILD_URL = None
+        Module = None
 
         assert os.path.isfile(os.path.join(game_path, 'index.html')), 'index.html'
         with open(os.path.join(game_path, 'index.html'), 'r') as r:
@@ -122,13 +122,21 @@ for game_id, key in games:
                         instantiate_re = re.search(r'(?:var (?:game|unity)Instance *= *)?UnityLoader\.instantiate\("(?:game|unity)Container", "(Build\/[^\/"]+\.json)"(?:, {onProgress: UnityProgress})?\);?', script_line)
                         if instantiate_re:
                             UNITY_WEBGL_BUILD_URL = instantiate_re[1]
-            if not UNITY_WEBGL_BUILD_URL:
-                raise NotImplementedError('unknown HTML', game_url)
-            else:
-                resource_urls.append(UNITY_WEBGL_BUILD_URL)
+                    if not UNITY_WEBGL_BUILD_URL:
+                        re_module = re.search(r'(var Module = {[^{}]+};)', script.string)
+                        if re_module:
+                            UNITY_WEBGL_BUILD_URL = ''
+                            Module = []
+                            body = pyjsparser.parse(re_module[1])['body']
+                            for property in body[0]['declarations'][0]['init']['properties']:
+                                if property['value']['type'] == 'Literal' and isinstance(property['value']['value'], str):
+                                    Module.append(property['value']['value'])
+                                    Module.append(property['value']['value'] + 'gz')
 
-        for resource_url in sorted(set(resource_urls)):
-            step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(resource_url, safe='/')))
+        if UNITY_WEBGL_BUILD_URL is None:
+            raise NotImplementedError('unknown HTML', game_url)
+        else:
+            step_urls.append(os.path.join(resource_root, game_path, UNITY_WEBGL_BUILD_URL))
 
         with open(temp_urllist, 'w') as w:
             for url in step_urls: print(url, file=w)
@@ -143,16 +151,27 @@ for game_id, key in games:
 
         discovered_urls.extend(step_urls)
         step_urls = []
+        resource_urls = [
+            'TemplateData/logo.png',
+            'TemplateData/progresslogo.png',
+            'TemplateData/loadingbar.png',
+            'TemplateData/fullbar.png',
+            'TemplateData/favicon.ico',
+            'TemplateData/favicon.png',
+        ]
         build_path = os.path.dirname(UNITY_WEBGL_BUILD_URL)
 
-        assert os.path.isfile(os.path.join(game_path, UNITY_WEBGL_BUILD_URL))
-        with open(os.path.join(game_path, UNITY_WEBGL_BUILD_URL), 'r') as r:
-            build_json = json.load(r)
-            for key, value in build_json.items():
-                if key not in ['companyName', 'productName', 'productVersion', 'TOTAL_MEMORY', 'splashScreenStyle', 'backgroundColor', 'unityVersion'] and isinstance(value, str):
-                    resource_urls.append(os.path.join(build_path, value))
-                    if key not in ['dataUrl', 'asmCodeUrl', 'asmMemoryUrl', 'asmFrameworkUrl', 'wasmCodeUrl', 'wasmMemoryUrl', 'wasmFrameworkUrl'] and isinstance(value, str):
-                        print(key, value)
+        if len(UNITY_WEBGL_BUILD_URL) >= 1:
+            with open(os.path.join(game_path, UNITY_WEBGL_BUILD_URL), 'r') as r:
+                build_json = json.load(r)
+                for key, value in build_json.items():
+                    if key not in ['companyName', 'productName', 'productVersion', 'TOTAL_MEMORY', 'splashScreenStyle', 'backgroundColor', 'unityVersion'] and isinstance(value, str):
+                        resource_urls.append(os.path.join(build_path, value))
+                        if key not in ['dataUrl', 'asmCodeUrl', 'asmMemoryUrl', 'asmFrameworkUrl', 'wasmCodeUrl', 'wasmMemoryUrl', 'wasmFrameworkUrl'] and isinstance(value, str):
+                            print(key, value)
+        else:
+            assert isinstance(Module, list)
+            resource_urls.extend(Module)
 
         for resource_url in sorted(set(resource_urls)):
             step_urls.append(os.path.join(resource_root, game_path, urllib.parse.quote(resource_url, safe='/')))
