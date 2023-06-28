@@ -27,6 +27,8 @@ https://resource.game.nicovideo.jp/games/gm43/23/js/plugins/AtsumaruThanksModal.
 https://resource.game.nicovideo.jp/games/gm43/23/js/plugins/CubeGrimoire_Store2.js
 https://resource.game.nicovideo.jp/games/gm43/23/js/plugins/cube-grimoire_core.js
 https://resource.game.nicovideo.jp/games/gm43/23/data/Map001.json
+https://resource.game.nicovideo.jp/games/gm43/23/audio/bgm/m-art_delusion.m4a
+https://resource.game.nicovideo.jp/games/gm43/23/audio/bgm/m-art_delusion.ogg
 https://resource.game.nicovideo.jp/games/gm43/23/img/animations/Darkness2.jpg.png
 https://resource.game.nicovideo.jp/games/gm43/23/img/animations/Explosion1.jpg.png
 https://resource.game.nicovideo.jp/games/gm43/23/img/animations/Holy3.jpg.png

@@ -26,6 +26,14 @@ https://resource.game.nicovideo.jp/games/gm46/1/js/plugins/TRI_FootstepSound.js
 https://resource.game.nicovideo.jp/games/gm46/1/js/plugins/TRI_DisableFastForward.js
 https://resource.game.nicovideo.jp/games/gm46/1/js/plugins/TRI_MessageWindowPopup.js
 https://resource.game.nicovideo.jp/games/gm46/1/data/Map001.json
+https://resource.game.nicovideo.jp/games/gm46/1/audio/bgm/%28PerituneMaterial%29_Harvest3_loop.m4a
+https://resource.game.nicovideo.jp/games/gm46/1/audio/bgm/%28PerituneMaterial%29_Harvest3_loop.ogg
+https://resource.game.nicovideo.jp/games/gm46/1/audio/se/Buzzer1.m4a
+https://resource.game.nicovideo.jp/games/gm46/1/audio/se/Buzzer1.ogg
+https://resource.game.nicovideo.jp/games/gm46/1/audio/se/Cancel2.m4a
+https://resource.game.nicovideo.jp/games/gm46/1/audio/se/Cancel2.ogg
+https://resource.game.nicovideo.jp/games/gm46/1/audio/se/Decision2.m4a
+https://resource.game.nicovideo.jp/games/gm46/1/audio/se/Decision2.ogg
 https://resource.game.nicovideo.jp/games/gm46/1/img/characters/%21Flame.png
 https://resource.game.nicovideo.jp/games/gm46/1/img/characters/%24%28IllustYa%29gokiburi.png
 https://resource.game.nicovideo.jp/games/gm46/1/img/characters/Nature.png

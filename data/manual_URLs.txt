@@ -124,4 +124,26 @@ https://resource.game.nicovideo.jp/games/gm6016/1/musicmode/ugo/odo1.ogg
 https://resource.game.nicovideo.jp/games/gm6016/1/musicmode/ugo/ude.ogg
 https://resource.game.nicovideo.jp/games/gm6016/1/pad.png
 
+https://resource.game.nicovideo.jp/games/gm17434/8/rom/game.gb
+
+https://resource.game.nicovideo.jp/games/gm17646/3/rom/game.gb
+
+https://resource.game.nicovideo.jp/games/gm18005/3/rom/game.gb
+
+https://resource.game.nicovideo.jp/games/gm18146/5/rom/game.gb
+
+https://resource.game.nicovideo.jp/games/gm29249/1/object.png
+
+https://resource.game.nicovideo.jp/games/gm29320/1/binjgb.wasm
+https://resource.game.nicovideo.jp/games/gm29320/1/rom/game.gb
+
+https://resource.game.nicovideo.jp/games/gm29532/3/binjgb.wasm
+https://resource.game.nicovideo.jp/games/gm29532/3/rom/game.gb
+
+https://resource.game.nicovideo.jp/games/gm29752/1/binjgb.wasm
+https://resource.game.nicovideo.jp/games/gm29752/1/rom/game.gb
+
+https://resource.game.nicovideo.jp/games/gm29754/1/binjgb.wasm
+https://resource.game.nicovideo.jp/games/gm29754/1/rom/game.gb
+
 https://resource.game.nicovideo.jp/games/gm29249/1/object.png

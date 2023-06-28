@@ -226,6 +226,8 @@ https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/99_Battle1.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/99_Battle1.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/99_Nazo.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/99_Nazo.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/99_Title1.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/99_Title1.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/99_Title2.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/99_Title2.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/99_Title3.m4a
@@ -260,6 +262,12 @@ https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/River.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/River.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Scene2.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Scene2.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Ship1.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Ship1.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Ship2.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Ship2.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Ship3.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Ship3.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Town1.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Town1.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgm/Town2.m4a
@@ -292,6 +300,8 @@ https://resource.game.nicovideo.jp/games/gm27/26/audio/bgs/Wind1.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/bgs/Wind1.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/me/99_Title1.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/me/99_Title1.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/me/Defeat1.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/me/Defeat1.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/me/Fanfare1.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/me/Fanfare1.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/me/Fanfare2.m4a
@@ -322,6 +332,12 @@ https://resource.game.nicovideo.jp/games/gm27/26/audio/se/07_m-Swall01.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/07_m-Swall01.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/07_m-Swish03.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/07_m-Swish03.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/1_Cursor.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/1_Cursor.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/1_Decision.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/1_Decision.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/1_Error.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/1_Error.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/1_Turn.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/1_Turn.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Absorb2.m4a
@@ -384,6 +400,8 @@ https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Buzzer1.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Buzzer1.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Buzzer2.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Buzzer2.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Cancel3.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Cancel3.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Cat.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Cat.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Chest1.m4a
@@ -552,6 +570,8 @@ https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Laser2.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Laser2.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Liquid.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Liquid.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Load.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Load.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Machine.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Machine.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Magic1.m4a
@@ -574,6 +594,8 @@ https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Magic7.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Magic7.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Magic8.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Magic8.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Miss.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Miss.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Monster1.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Monster1.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Monster10.m4a
@@ -652,6 +674,8 @@ https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Saint9.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Saint9.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Sand.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Sand.ogg
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Save.m4a
+https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Save.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Shop1.m4a
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Shop1.ogg
 https://resource.game.nicovideo.jp/games/gm27/26/audio/se/Shop2.m4a
@@ -1366,9 +1390,11 @@ https://resource.game.nicovideo.jp/games/gm27/26/img/system/ButtonSet.png
 https://resource.game.nicovideo.jp/games/gm27/26/img/system/Damage.png
 https://resource.game.nicovideo.jp/games/gm27/26/img/system/GameOver.png
 https://resource.game.nicovideo.jp/games/gm27/26/img/system/IconSet.png
+https://resource.game.nicovideo.jp/games/gm27/26/img/system/Loading.png
 https://resource.game.nicovideo.jp/games/gm27/26/img/system/Shadow1.png
 https://resource.game.nicovideo.jp/games/gm27/26/img/system/Shadow2.png
 https://resource.game.nicovideo.jp/games/gm27/26/img/system/States.png
+https://resource.game.nicovideo.jp/games/gm27/26/img/system/System.png
 https://resource.game.nicovideo.jp/games/gm27/26/img/system/Weapons1.png
 https://resource.game.nicovideo.jp/games/gm27/26/img/system/Weapons2.png
 https://resource.game.nicovideo.jp/games/gm27/26/img/system/Weapons3.png

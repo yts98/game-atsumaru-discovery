@@ -1,5 +1,7 @@
 core/
-data/state.json
+data/api_requests.txt
+data/iterate/
+data/state/
 games/
 ticket/
 warc/

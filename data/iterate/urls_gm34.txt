@@ -19,6 +19,14 @@ https://resource.game.nicovideo.jp/games/gm34/4/js/plugins/AcceptAllKeys.js
 https://resource.game.nicovideo.jp/games/gm34/4/js/plugins/dwango_androidpatch.js
 https://resource.game.nicovideo.jp/games/gm34/4/data/Map001.json
 https://resource.game.nicovideo.jp/games/gm34/4/data/Map002.json
+https://resource.game.nicovideo.jp/games/gm34/4/audio/se/Cat.m4a
+https://resource.game.nicovideo.jp/games/gm34/4/audio/se/Cat.ogg
+https://resource.game.nicovideo.jp/games/gm34/4/audio/se/CatDown01.m4a
+https://resource.game.nicovideo.jp/games/gm34/4/audio/se/CatDown01.ogg
+https://resource.game.nicovideo.jp/games/gm34/4/audio/se/CatUp01.m4a
+https://resource.game.nicovideo.jp/games/gm34/4/audio/se/CatUp01.ogg
+https://resource.game.nicovideo.jp/games/gm34/4/audio/se/CatUp02.m4a
+https://resource.game.nicovideo.jp/games/gm34/4/audio/se/CatUp02.ogg
 https://resource.game.nicovideo.jp/games/gm34/4/img/characters/Cat1.png
 https://resource.game.nicovideo.jp/games/gm34/4/img/pictures/a.png
 https://resource.game.nicovideo.jp/games/gm34/4/img/pictures/b.png

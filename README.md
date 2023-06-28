@@ -50,25 +50,27 @@ game-atsumaru-discovery
 
 ## Others
 
+- Add URLs you found to `data/manual_URLs.txt` and execute `step7-manual.py`.
+
 ### Phaser
 - 2742
 - 14174
 
 ### enchant.js + Box2D
-- 5404, 5461, 5530, 5608, 5614, 5749
+- 5404, 5461, 5530, 5608, 5614, 5749, 6016
 
 ### GDevelop JavaScript
-- 15302
+- 15302 (DONE)
 
 ### GB Studio
-- 17434, 17646, 18005, 18146
+- 17434, 17646, 18005, 18146 (DONE)
 
 ### binjgb
-- 29320, 29532, 29752, 29754
+- 29320, 29532, 29752, 29754 (DONE)
 
 ### Vanilla JS
-- 165
-- 29249, 29267
+- 165 (DONE)
+- 29249, 29267 (DONE)
 
 ## Usage
 
